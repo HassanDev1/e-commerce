@@ -81,7 +81,7 @@ export default function Layout({ title, description, children }) {
         <Container className={classes.main}>{children}</Container>
         <footer className={classes.footer}>
           <Typography>
-            © {new Date().getFullYear()} UShop. All rights{" "}
+            © {new Date().getFullYear()} UShop. All rights.
           </Typography>
         </footer>
       </ThemeProvider>
