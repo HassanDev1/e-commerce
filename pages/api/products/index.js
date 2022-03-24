@@ -1,8 +1,6 @@
 import nc from "next-connect";
 import { connectToDatabase } from "../../../utils/db";
 
-import data from "../../../utils/data";
-
 const handler = nc();
 
 handler.get(async (req, res) => {

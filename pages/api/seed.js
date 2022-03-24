@@ -1,7 +1,6 @@
 import nc from "next-connect";
 import { connectToDatabase } from "../../../utils/db";
 import data from "../../../utils/data";
-import Product from "../../../models/Product";
 
 const handler = nc();
 
