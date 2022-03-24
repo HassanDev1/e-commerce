@@ -11,11 +11,10 @@ import {
 } from "@material-ui/core";
 import Layout from "../../components/Layout";
 import useStyles from "../../utils/styles";
-import Product from '../../models/Product';
-import db from '../../utils/db';
+import { connectToDatabase } from "../../utils/db";
 
 export default function ProductScreen(props) {
-  const {product} = props;
+  const { product } = props;
   const classes = useStyles();
   if (!product) {
     return <div>Product Not Found</div>;
@@ -100,17 +99,15 @@ export default function ProductScreen(props) {
   );
 }
 
+export const getServerSideProps = async (context) => {
+  const { params } = context;
+  const { slug } = params;
+  const { db } = await connectToDatabase();
 
-export async function getServerSideProps(context) {
-  const {params} = context;
-  const {slug} = params;
+  const properties = await db.collection("Products").findOne({ slug });
+  const product = JSON.parse(JSON.stringify(properties));
 
-  await db.connect();
-  const product = await Product.findOne({slug}).lean();
-  await db.disconnect();
   return {
-    props: {
-      product: db.convertDocToObj(product),
-    },
+    props: { product },
   };
-}
+};

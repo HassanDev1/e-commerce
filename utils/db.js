@@ -1,47 +1,42 @@
-import mongoose from 'mongoose'
+import { MongoClient } from "mongodb";
 
-const connection = {};
+const { MONGODB_URI, MONGODB_DB } = process.env;
 
-async function connect() {
-    if(connection.isConnected){
-        console.log('already connected');
-        return;
-    }
-    if(mongoose.connections.length > 0){
-        connection.isConnected = mongoose.connections[0].readyState;
-        if(connection.isConnected === 1){
-            console.log('use previous connection');
-            return;
-        }
+if (!MONGODB_URI) {
+  throw new Error(
+    "Please define the MONGO_URI environment variable inside .env"
+  );
+}
 
-        await mongoose.disconnect();
-    }
-    const db = mongoose.connect(process.env.MONGODB_URI, {
-        //useNewUrlParse: true,
-        useUnifiedTopology: true,
-        //useCreateIndex: true,
+if (!MONGODB_DB) {
+  throw new Error(
+    "Please define the MONGODB_DB environment variable inside .env"
+  );
+}
+
+let cached = global.mongo;
+
+if (!cached) {
+  cached = global.mongo = { conn: null, promise: null };
+}
+
+export async function connectToDatabase() {
+  if (cached.conn) {
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    const opts = {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    };
+    cached.promise = MongoClient.connect(MONGODB_URI, opts).then((client) => {
+      return {
+        client,
+        db: client.db(MONGODB_DB),
+      };
     });
-    console.log('new connection');
-    connection.isConnected = mongoose.connections[0].readyState;
+  }
+  cached.conn = await cached.promise;
+  return cached.conn;
 }
-
-async function disconnect(){
-    if(connection.isConnected){
-        if(process.env.NODE_ENV === 'production'){
-            await mongoose.disconnect;
-            connection.isConnected = false;
-        } else {
-            console.log('not disconnected');
-        }
-    }
-}
-
-function convertDocToObj(doc) {
-    doc._id = doc._id.toString();
-    doc.createdAt = doc.createdAt.toString();
-    doc.updatedAt = doc.updatedAt.toString();
-    return doc;
-}
-
-const db = { connect, disconnect, convertDocToObj};
-export default db;

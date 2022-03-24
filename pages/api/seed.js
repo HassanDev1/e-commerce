@@ -1,16 +1,16 @@
-import nc from 'next-connect';
-import Product from "../../models/Product"
-import db from '../../utils/db';
-import data from '../../utils/data';
+import nc from "next-connect";
+import { connectToDatabase } from "../../../utils/db";
+import data from "../../../utils/data";
+import Product from "../../../models/Product";
 
 const handler = nc();
 
-handler.get(async (req, res) =>{
-    await db.connect();
-    await Product.deleteMany();
-    await Product.insertMany(data.products);
-    await db.disconnect();
-    res.send({message: 'seeded successfully' })
+handler.get(async (req, res) => {
+  const { db } = await connectToDatabase();
+  await db.collection("Products").deleteMany();
+  await db.collection("Products").insertMany(data.products);
+
+  res.send({ message: "seeded sucessfully" });
 });
 
 export default handler;

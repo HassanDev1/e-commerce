@@ -10,11 +10,10 @@ import {
 } from "@material-ui/core";
 import Layout from "../components/Layout";
 import NextLink from "next/link";
-import db from "../utils/db";
-import Product from "../models/Product";
+import { connectToDatabase } from "../utils/db";
 
 export default function Home(props) {
-  const {products} = props;
+  const { products } = props;
   return (
     <Layout>
       <div>
@@ -53,13 +52,13 @@ export default function Home(props) {
   );
 }
 
-export async function getServerSideProps() {
-  await db.connect();
-  const products = await Product.find({}).lean();
-  await db.disconnect();
+export const getServerSideProps = async () => {
+  const { db } = await connectToDatabase();
+
+  const properties = await db.collection("Products").find({}).toArray();
+  const products = JSON.parse(JSON.stringify(properties));
+
   return {
-    props: {
-      products: products.map(db.convertDocToObj),
-    },
+    props: { products },
   };
-}
+};
