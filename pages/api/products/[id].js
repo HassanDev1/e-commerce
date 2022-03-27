@@ -14,7 +14,7 @@ handler.get(async (req, res) => {
 
   // res.send({ message: "seeded sucessfully" });
 
-  const product = await db.collection('Products').find({}).toArray();
+  const product = await db.collection('Products').find(req.query.id).toArray();
   res.json(product);
 
   return product;
