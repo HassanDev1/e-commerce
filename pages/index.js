@@ -7,13 +7,30 @@ import {
   CardMedia,
   Grid,
   Typography,
-} from "@material-ui/core";
-import Layout from "../components/Layout";
-import NextLink from "next/link";
-import { connectToDatabase } from "../utils/db";
+} from '@material-ui/core';
+import Layout from '../components/Layout';
+import NextLink from 'next/link';
+import { connectToDatabase } from '../utils/db';
+import { Store } from '../utils/Store';
+import axios from 'axios';
+import { useRouter } from 'next/router';
+import { useContext } from 'react';
 
 export default function Home(props) {
+  const router = useRouter();
+  const { state, dispatch } = useContext(Store);
   const { products } = props;
+  const addToCartHandler = async (product) => {
+    const existItem = state.cart.cartItems.find((x) => x._id === product._id);
+    const quantity = existItem ? existItem.quantity + 1 : 1;
+    const { data } = await axios.get(`/api/products/${product._id}`);
+    if (data.countInStock < quantity) {
+      window.alert('Sorry, this product is out of stock at the moment.');
+      return;
+    }
+    dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity } });
+    router.push('/cart');
+  };
   return (
     <Layout>
       <div>
@@ -26,7 +43,7 @@ export default function Home(props) {
                   <CardActionArea>
                     <CardMedia
                       height={340}
-                      component='img'
+                      component="img"
                       image={product.image}
                       title={product.image}
                     ></CardMedia>
@@ -38,7 +55,11 @@ export default function Home(props) {
                 <CardActions>
                   <Typography>
                     ${product.price}
-                    <Button size='small' color='primary'>
+                    <Button
+                      size="small"
+                      color="primary"
+                      onClick={() => addToCartHandler(product)}
+                    >
                       Add to Cart
                     </Button>
                   </Typography>
@@ -55,7 +76,7 @@ export default function Home(props) {
 export const getServerSideProps = async () => {
   const { db } = await connectToDatabase();
 
-  const properties = await db.collection("Products").find({}).toArray();
+  const properties = await db.collection('Products').find({}).toArray();
   const products = JSON.parse(JSON.stringify(properties));
 
   return {
