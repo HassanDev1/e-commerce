@@ -33,6 +33,7 @@ export default function ProductScreen(props) {
       window.alert('Sorry, this product is out of stock at the moment.');
       return;
     }
+
     dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity } });
     router.push('/cart');
   };
