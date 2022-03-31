@@ -11,7 +11,9 @@
   "dependencies": {
     "@material-ui/core": "^4.12.3",
     "axios": "^0.26.1",
+    "bcryptjs": "^2.4.3",
     "js-cookie": "^3.0.1",
+    "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.4.1",
     "mongoose": "^6.2.8",
     "next": "12.1.0",
