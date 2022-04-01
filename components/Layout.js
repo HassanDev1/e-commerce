@@ -19,7 +19,7 @@ import NextLink from 'next/link';
 import { useContext, useState } from 'react';
 import { Store } from '../utils/Store';
 import Cookies from 'js-cookie';
-import { Router, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
 export default function Layout({ title, description, children }) {
   const router = useRouter();
