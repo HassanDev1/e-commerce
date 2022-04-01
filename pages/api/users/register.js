@@ -7,7 +7,7 @@ import data from '../../../utils/data';
 const handler = nc();
 
 handler.post(async (req, res) => {
-  const { db } = connectToDatabase();
+  const { db } = await connectToDatabase();
   const newUser = {
     name: req.body.name,
     email: req.body.email,
