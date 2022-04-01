@@ -1,4 +1,19 @@
+import bcyrpt from 'bcryptjs';
 export const data = {
+  users: [
+    {
+      name: 'John',
+      email: 'John@shop.com',
+      password: bcyrpt.hashSync('John123'),
+      isAdmin: true,
+    },
+    {
+      name: 'Matt',
+      email: 'Matt@gmail.com',
+      password: bcyrpt.hashSync('Matt123'),
+      isAdmin: false,
+    },
+  ],
   products: [
     {
       isNew: true,
