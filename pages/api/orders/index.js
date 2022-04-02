@@ -10,11 +10,12 @@ handler.use(isAuth);
 
 handler.post(async (req, res) => {
   const { db } = await connectToDatabase();
-
-  const order = await db.collection('Orders').save({
+  const newOrder = {
     ...req.body,
     user: req.user._id,
-  });
+  };
+
+  const order = await db.collection('Orders').insert(newOrder);
 
   res.status(201).send(order);
 });
