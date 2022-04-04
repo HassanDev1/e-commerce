@@ -80,7 +80,7 @@ function PlaceOrder() {
       dispatch({ type: 'CART_CLEAR' });
       Cookies.remove('cartItems');
       setLoading(false);
-      router.push(`/order/${data._id}`);
+      router.push(`/order/${data.insertedIds[0]}`);
     } catch (err) {
       setLoading(false);
       enqueueSnackbar(getError(err), { variant: 'error' });

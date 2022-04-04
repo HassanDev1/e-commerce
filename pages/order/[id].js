@@ -23,6 +23,7 @@ import {
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import useStyles from '../../utils/styles';
+import CheckoutWizard from '../../components/CheckoutWizard';
 import { useSnackbar } from 'notistack';
 import { getError } from '../../utils/error';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
@@ -77,23 +78,31 @@ function Order({ params }) {
     isDelivered,
     deliveredAt,
   } = order;
-
+  const [lastData, setLastData] = useState([]);
   useEffect(() => {
     if (!userInfo) {
       return router.push('/login');
     }
+
     const fetchOrder = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(`/api/orders/${orderId}`, {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
-        dispatch({ type: 'FETCH_SUCCESS', payload: data });
+
+        setLastData(data[data.length - 1]);
+
+        dispatch({ type: 'FETCH_SUCCESS', payload: data[data.length - 1] });
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
       }
     };
-    if (!order._id || successPay || (order._id && order._id !== orderId)) {
+    if (
+      !lastData._id ||
+      successPay ||
+      (lastData._id && lastData._id !== orderId)
+    ) {
       fetchOrder();
       if (successPay) {
         dispatch({ type: 'PAY_RESET' });
@@ -116,7 +125,6 @@ function Order({ params }) {
     }
   }, [order, successPay]);
   const { closeSnackbar, enqueueSnackbar } = useSnackbar();
-
   function createOrder(data, actions) {
     return actions.order
       .create({
@@ -130,7 +138,6 @@ function Order({ params }) {
         return orderID;
       });
   }
-
   function onApprove(data, actions) {
     return actions.order.capture().then(async function (details) {
       try {
@@ -154,11 +161,11 @@ function Order({ params }) {
   function onError(err) {
     enqueueSnackbar(getError(err), { variant: 'error' });
   }
-
   return (
-    <Layout title={`Order ${orderId}`}>
+    <Layout title={`Order ${lastData._id}`}>
+      <CheckoutWizard activeStep={3}></CheckoutWizard>
       <Typography component="h1" variant="h1">
-        Order {orderId}
+        Order {lastData._id}
       </Typography>
       {loading ? (
         <CircularProgress />
