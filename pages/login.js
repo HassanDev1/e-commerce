@@ -5,19 +5,19 @@ import {
   TextField,
   Button,
   Link,
-} from '@material-ui/core';
-import NextLink from 'next/link';
-import React, { useEffect } from 'react';
-import Layout from '../components/Layout';
-import useStyles from '../utils/styles';
-import axios from 'axios';
-import { useContext } from 'react';
-import { Store } from '../utils/Store';
-import { useRouter } from 'next/router';
-import Cookies from 'js-cookie';
-import { Controller, useForm } from 'react-hook-form';
-import { useSnackbar } from 'notistack';
-import { getError } from '../utils/error';
+} from "@material-ui/core";
+import NextLink from "next/link";
+import React, { useEffect } from "react";
+import Layout from "../components/Layout";
+import useStyles from "../utils/styles";
+import axios from "axios";
+import { useContext } from "react";
+import { Store } from "../utils/Store";
+import { useRouter } from "next/router";
+import Cookies from "js-cookie";
+import { Controller, useForm } from "react-hook-form";
+import { useSnackbar } from "notistack";
+import { getError } from "../utils/error";
 
 export default function Login() {
   const {
@@ -32,7 +32,7 @@ export default function Login() {
   const { userInfo } = state;
   useEffect(() => {
     if (userInfo) {
-      router.push('/');
+      router.push("/");
     }
   }, []);
 
@@ -40,47 +40,48 @@ export default function Login() {
   const submitHandler = async ({ email, password }) => {
     closeSnackbar();
     try {
-      const { data } = await axios.post('/api/users/login', {
+      const { data } = await axios.post("/api/users/login", {
         email,
         password,
       });
-      dispatch({ type: 'USER_LOGIN', payload: data });
-      Cookies.set('userInfo', JSON.stringify(data));
-      router.push(redirect || '/');
+
+      dispatch({ type: "USER_LOGIN", payload: data });
+      Cookies.set("userInfo", JSON.stringify(data));
+      router.push(redirect || "/");
     } catch (err) {
-      enqueueSnackbar(getError(err), { variant: 'error' });
+      enqueueSnackbar(getError(err), { variant: "error" });
     }
   };
   return (
-    <Layout title="Login">
+    <Layout title='Login'>
       <form onSubmit={handleSubmit(submitHandler)} className={classes.form}>
-        <Typography component="h2" variant="h2" align="center">
+        <Typography component='h2' variant='h2' align='center'>
           Login
         </Typography>
         <List>
           <ListItem>
             <Controller
-              name="email"
+              name='email'
               control={control}
-              defaultValue=""
+              defaultValue=''
               rules={{
                 required: true,
                 pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
               }}
               render={({ field }) => (
                 <TextField
-                  variant="outlined"
+                  variant='outlined'
                   fullWidth
-                  id="email"
-                  label="Email"
-                  inputProps={{ type: 'email' }}
+                  id='email'
+                  label='Email'
+                  inputProps={{ type: "email" }}
                   error={Boolean(errors.email)}
                   helperText={
                     errors.email
-                      ? errors.email.type === 'pattern'
-                        ? 'Email is not valid'
-                        : 'Email is required'
-                      : ''
+                      ? errors.email.type === "pattern"
+                        ? "Email is not valid"
+                        : "Email is required"
+                      : ""
                   }
                   {...field}
                 ></TextField>
@@ -89,27 +90,27 @@ export default function Login() {
           </ListItem>
           <ListItem>
             <Controller
-              name="password"
+              name='password'
               control={control}
-              defaultValue=""
+              defaultValue=''
               rules={{
                 required: true,
                 minLength: 3,
               }}
               render={({ field }) => (
                 <TextField
-                  variant="outlined"
+                  variant='outlined'
                   fullWidth
-                  id="password"
-                  label="Password"
-                  inputProps={{ type: 'password' }}
+                  id='password'
+                  label='Password'
+                  inputProps={{ type: "password" }}
                   error={Boolean(errors.password)}
                   helperText={
                     errors.password
-                      ? errors.password.type === 'minLength'
-                        ? ''
-                        : 'Password is required'
-                      : ''
+                      ? errors.password.type === "minLength"
+                        ? ""
+                        : "Password is required"
+                      : ""
                   }
                   {...field}
                 ></TextField>
@@ -117,13 +118,13 @@ export default function Login() {
             ></Controller>
           </ListItem>
           <ListItem>
-            <Button variant="contained" type="submit" fullWidth color="primary">
+            <Button variant='contained' type='submit' fullWidth color='primary'>
               Login
             </Button>
           </ListItem>
           <ListItem>
             Don&apos;t have an account? &nbsp;
-            <NextLink href={`/register?redirect=${redirect || '/'}`} passHref>
+            <NextLink href={`/register?redirect=${redirect || "/"}`} passHref>
               <Link>Register</Link>
             </NextLink>
           </ListItem>
