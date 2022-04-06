@@ -1,8 +1,8 @@
-import axios from "axios";
-import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
-import NexLink from "next/link";
-import React, { useEffect, useContext } from "react";
+import axios from 'axios';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
+import NexLink from 'next/link';
+import React, { useEffect, useContext } from 'react';
 import {
   Grid,
   List,
@@ -12,14 +12,14 @@ import {
   Button,
   ListItemText,
   TextField,
-} from "@material-ui/core";
-import { getError } from "../utils/error";
-import { Store } from "../utils/Store";
-import Layout from "../components/Layout";
-import useStyles from "../utils/styles";
-import { Controller, useForm } from "react-hook-form";
-import { useSnackbar } from "notistack";
-import Cookies from "js-cookie";
+} from '@material-ui/core';
+import { getError } from '../utils/error';
+import { Store } from '../utils/Store';
+import Layout from '../components/Layout';
+import useStyles from '../utils/styles';
+import { Controller, useForm } from 'react-hook-form';
+import { useSnackbar } from 'notistack';
+import Cookies from 'js-cookie';
 
 function Profile() {
   const { state, dispatch } = useContext(Store);
@@ -38,20 +38,20 @@ function Profile() {
 
   useEffect(() => {
     if (!userInfo) {
-      return router.push("/login");
+      return router.push('/login');
     }
-    setValue("name", userInfo.name);
-    setValue("email", userInfo.email);
+    setValue('name', userInfo.name);
+    setValue('email', userInfo.email);
   }, []);
   const submitHandler = async ({ name, email, password, confirmPassword }) => {
     closeSnackbar();
     if (password !== confirmPassword) {
-      enqueueSnackbar("Passwords don't match", { variant: "error" });
+      enqueueSnackbar("Passwords don't match", { variant: 'error' });
       return;
     }
     try {
       const { data } = await axios.put(
-        "api/users/profile",
+        'api/users/profile',
         {
           name,
           email,
@@ -60,29 +60,29 @@ function Profile() {
         { headers: { authorization: `Bearer ${userInfo.token}` } }
       );
 
-      dispatch({ type: "USER_LOGIN", payload: data });
-      Cookies.set("userInfo", JSON.stringify(data));
-      router.push(redirect || "/login");
+      dispatch({ type: 'USER_LOGOUT', payload: data });
+      Cookies.set('userInfo', JSON.stringify(data));
+      router.push(redirect || '/login');
 
-      enqueueSnackbar("Profile updated successfully", { variant: "success" });
+      enqueueSnackbar('Profile updated successfully', { variant: 'success' });
     } catch (err) {
-      enqueueSnackbar(getError(err), { variant: "error" });
+      enqueueSnackbar(getError(err), { variant: 'error' });
     }
   };
   return (
-    <Layout title='Profile'>
+    <Layout title="Profile">
       <Grid container spacing={1}>
         <Grid item md={3} xs={12}>
           <Card className={classes.section}>
             <List>
-              <NexLink href='/profile' passHref>
-                <ListItem selected button component='a'>
-                  <ListItemText primary='User Profile'></ListItemText>
+              <NexLink href="/profile" passHref>
+                <ListItem selected button component="a">
+                  <ListItemText primary="User Profile"></ListItemText>
                 </ListItem>
               </NexLink>
-              <NexLink href='/order-history' passHref>
-                <ListItem button component='a'>
-                  <ListItemText primary='Order History'></ListItemText>
+              <NexLink href="/order-history" passHref>
+                <ListItem button component="a">
+                  <ListItemText primary="Order History"></ListItemText>
                 </ListItem>
               </NexLink>
             </List>
@@ -92,7 +92,7 @@ function Profile() {
           <Card className={classes.section}>
             <List>
               <ListItem>
-                <Typography component='h1' variant='h1'>
+                <Typography component="h1" variant="h1">
                   Profile
                 </Typography>
               </ListItem>
@@ -104,27 +104,27 @@ function Profile() {
                   <List>
                     <ListItem>
                       <Controller
-                        name='name'
+                        name="name"
                         control={control}
-                        defaultValue=''
+                        defaultValue=""
                         rules={{
                           required: true,
                           minLength: 2,
                         }}
                         render={({ field }) => (
                           <TextField
-                            variant='outlined'
+                            variant="outlined"
                             fullWidth
-                            id='name'
-                            label='Name'
-                            inputProps={{ type: "name" }}
+                            id="name"
+                            label="Name"
+                            inputProps={{ type: 'name' }}
                             error={Boolean(errors.name)}
                             helperText={
                               errors.name
-                                ? errors.name.type === "minLength"
-                                  ? "Name length is more than 1"
-                                  : "Name is required"
-                                : ""
+                                ? errors.name.type === 'minLength'
+                                  ? 'Name length is more than 1'
+                                  : 'Name is required'
+                                : ''
                             }
                             {...field}
                           ></TextField>
@@ -133,27 +133,27 @@ function Profile() {
                     </ListItem>
                     <ListItem>
                       <Controller
-                        name='email'
+                        name="email"
                         control={control}
-                        defaultValue=''
+                        defaultValue=""
                         rules={{
                           required: true,
                           pattern: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/,
                         }}
                         render={({ field }) => (
                           <TextField
-                            variant='outlined'
+                            variant="outlined"
                             fullWidth
-                            id='email'
-                            label='Email'
-                            inputProps={{ type: "email" }}
+                            id="email"
+                            label="Email"
+                            inputProps={{ type: 'email' }}
                             error={Boolean(errors.email)}
                             helperText={
                               errors.email
-                                ? errors.email.type === "pattern"
-                                  ? "Email is not valid"
-                                  : "Email is required"
-                                : ""
+                                ? errors.email.type === 'pattern'
+                                  ? 'Email is not valid'
+                                  : 'Email is required'
+                                : ''
                             }
                             {...field}
                           ></TextField>
@@ -162,28 +162,28 @@ function Profile() {
                     </ListItem>
                     <ListItem>
                       <Controller
-                        name='password'
+                        name="password"
                         control={control}
-                        defaultValue=''
+                        defaultValue=""
                         rules={{
                           required: true,
                           validate: (value) =>
-                            value === "" ||
+                            value === '' ||
                             value.length > 3 ||
-                            "Password length must be greater than 3 characters",
+                            'Password length must be greater than 3 characters',
                         }}
                         render={({ field }) => (
                           <TextField
-                            variant='outlined'
+                            variant="outlined"
                             fullWidth
-                            id='password'
-                            label='Password'
-                            inputProps={{ type: "password" }}
+                            id="password"
+                            label="Password"
+                            inputProps={{ type: 'password' }}
                             error={Boolean(errors.password)}
                             helperText={
                               errors.password
-                                ? "Password length must be greater than 3 characters"
-                                : ""
+                                ? 'Password length must be greater than 3 characters'
+                                : ''
                             }
                             {...field}
                           ></TextField>
@@ -192,28 +192,28 @@ function Profile() {
                     </ListItem>
                     <ListItem>
                       <Controller
-                        name='confirmPassword'
+                        name="confirmPassword"
                         control={control}
-                        defaultValue=''
+                        defaultValue=""
                         rules={{
                           required: true,
                           validate: (value) =>
-                            value === "" ||
+                            value === '' ||
                             value.length > 3 ||
-                            "Confirm Password length must be greater than 3 characters",
+                            'Confirm Password length must be greater than 3 characters',
                         }}
                         render={({ field }) => (
                           <TextField
-                            variant='outlined'
+                            variant="outlined"
                             fullWidth
-                            id='confirmPassword'
-                            label='Confirm Password'
-                            inputProps={{ type: "password" }}
+                            id="confirmPassword"
+                            label="Confirm Password"
+                            inputProps={{ type: 'password' }}
                             error={Boolean(errors.confirmPassword)}
                             helperText={
                               errors.password
-                                ? "Confirm Password length must be greater than 3 characters"
-                                : ""
+                                ? 'Confirm Password length must be greater than 3 characters'
+                                : ''
                             }
                             {...field}
                           ></TextField>
@@ -222,10 +222,10 @@ function Profile() {
                     </ListItem>
                     <ListItem>
                       <Button
-                        variant='contained'
-                        type='submit'
+                        variant="contained"
+                        type="submit"
                         fullWidth
-                        color='primary'
+                        color="primary"
                       >
                         Update
                       </Button>
