@@ -12,7 +12,7 @@ handler.put(async (req, res) => {
   const user = {
     name: req.body.name,
     email: req.body.email,
-    password: req.body.password ? bcrypt.hashSync(req.body.password) : password,
+    password: req.body.password ? bcrypt.hashSync(req.body.password) : "",
   };
 
   await db.collection("Users").updateOne(
@@ -21,9 +21,7 @@ handler.put(async (req, res) => {
       $set: {
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password
-          ? bcrypt.hashSync(req.body.password)
-          : password,
+        password: req.body.password ? bcrypt.hashSync(req.body.password) : "",
       },
     }
   );
@@ -34,7 +32,7 @@ handler.put(async (req, res) => {
     _id: ObjectId(req.user._id),
     name: req.body.name,
     email: req.body.email,
-    password: req.body.password ? bcrypt.hashSync(req.body.password) : password,
+    password: req.body.password ? bcrypt.hashSync(req.body.password) : "",
   });
 });
 

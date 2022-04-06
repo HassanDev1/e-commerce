@@ -2,7 +2,6 @@ import nc from "next-connect";
 import bcrypt from "bcryptjs";
 import { connectToDatabase } from "../../../utils/db";
 import { signToken } from "../../../utils/auth";
-import { ObjectId } from "mongodb";
 
 const handler = nc();
 
