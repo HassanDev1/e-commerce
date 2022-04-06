@@ -1,8 +1,8 @@
-import nc from 'next-connect';
-import bcrypt from 'bcryptjs';
-import { connectToDatabase } from '../../../utils/db';
-import { signToken } from '../../../utils/auth';
-import data from '../../../utils/data';
+import nc from "next-connect";
+import bcrypt from "bcryptjs";
+import { connectToDatabase } from "../../../utils/db";
+import { signToken } from "../../../utils/auth";
+import { ObjectId } from "mongodb";
 
 const handler = nc();
 
@@ -14,16 +14,16 @@ handler.post(async (req, res) => {
     password: bcrypt.hashSync(req.body.password),
     isAdmin: false,
   };
-  data.users.concat(newUser);
-  const user = await db.collection('Users').insertOne(newUser);
 
-  const token = signToken(user);
+  const insertId = await db.collection("Users").insertOne(newUser);
+
+  const token = signToken(newUser);
   res.send({
     token,
-    _id: user._id,
-    name: user.name,
-    email: user.email,
-    isAdmin: user.isAdmin,
+    _id: insertId.insertedId,
+    name: req.body.name,
+    email: req.body.email,
+    password: bcrypt.hashSync(req.body.password),
   });
 });
 

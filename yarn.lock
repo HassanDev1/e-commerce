@@ -549,6 +549,28 @@
     "@nodelib/fs.scandir" "2.1.5"
     "fastq" "^1.6.0"
 
+"@paypal/paypal-js@^5.0.2":
+  "integrity" "sha512-PvH5LUW4t6gqSh7LPtaUKkmb8Ygo0K/kPsrZA9amamX1W/uMza/8NXfTSzLxR8ZYM7Sm4vPMj5pyUDkLZnDpFA=="
+  "resolved" "https://registry.npmjs.org/@paypal/paypal-js/-/paypal-js-5.0.3.tgz"
+  "version" "5.0.3"
+  dependencies:
+    "promise-polyfill" "^8.2.3"
+
+"@paypal/react-paypal-js@^7.6.0":
+  "integrity" "sha512-GPaFXOVEh2bCNKOmLmArxWoBM6gfzoP41HfDdEr58geJi+t32/FtVKdaoxymE6f3oStaobt6KDdzxPpKuNeisQ=="
+  "resolved" "https://registry.npmjs.org/@paypal/react-paypal-js/-/react-paypal-js-7.6.0.tgz"
+  "version" "7.6.0"
+  dependencies:
+    "@paypal/paypal-js" "^5.0.2"
+    "@paypal/sdk-constants" "^1.0.116"
+
+"@paypal/sdk-constants@^1.0.116":
+  "integrity" "sha512-vpvAz0L0/Bia/0wT8dDcieZFTcc0jqlQCPY8Qq5E2Sk7J0/klW42Xthp4cUXmR72OH7xRjjqIKDPz9TKlD/8hQ=="
+  "resolved" "https://registry.npmjs.org/@paypal/sdk-constants/-/sdk-constants-1.0.118.tgz"
+  "version" "1.0.118"
+  dependencies:
+    "hi-base32" "^0.5.0"
+
 "@popperjs/core@^2.11.4":
   "integrity" "sha512-q/ytXxO5NKvyT37pmisQAItCFqA7FD/vNb8dgaJy3/630Fsc+Mz9/9f2SziBoIZ30TJooXyTwZmhi1zjXmObYg=="
   "resolved" "https://registry.npmjs.org/@popperjs/core/-/core-2.11.4.tgz"
@@ -1525,6 +1547,11 @@
   dependencies:
     "function-bind" "^1.1.1"
 
+"hi-base32@^0.5.0":
+  "integrity" "sha512-EmBBpvdYh/4XxsnUybsPag6VikPYnN30td+vQk+GI3qpahVEG9+gTkG0aXVxTjBqQ5T6ijbWIu77O+C5WFWsnA=="
+  "resolved" "https://registry.npmjs.org/hi-base32/-/hi-base32-0.5.1.tgz"
+  "version" "0.5.1"
+
 "hoist-non-react-statics@^3.3.0", "hoist-non-react-statics@^3.3.1", "hoist-non-react-statics@^3.3.2":
   "integrity" "sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw=="
   "resolved" "https://registry.npmjs.org/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz"
@@ -1859,10 +1886,10 @@
     "jwa" "^1.4.1"
     "safe-buffer" "^5.0.1"
 
-"kareem@2.3.4":
-  "integrity" "sha512-Vcrt8lcpVl0s8ePx634BxwRqmFo+5DcOhlmNadehxreMTIQi/9hOL/B3hZQQbK5DgMS7Lem3xABXV7/S3jy+7g=="
-  "resolved" "https://registry.npmjs.org/kareem/-/kareem-2.3.4.tgz"
-  "version" "2.3.4"
+"kareem@2.3.5":
+  "integrity" "sha512-qxCyQtp3ioawkiRNQr/v8xw9KIviMSSNmy+63Wubj7KmMn3g7noRXIZB4vPCAP+ETi2SR8eH6CvmlKZuGpoHOg=="
+  "resolved" "https://registry.npmjs.org/kareem/-/kareem-2.3.5.tgz"
+  "version" "2.3.5"
 
 "language-subtag-registry@~0.3.2":
   "integrity" "sha512-L0IqwlIXjilBVVYKFT37X9Ih11Um5NEl9cbJIuU/SwP/zEEAbBPOnEeeuxVMf45ydWQRDQN3Nqc96OgbH1K+Pg=="
@@ -2013,13 +2040,13 @@
   optionalDependencies:
     "saslprep" "^1.0.3"
 
-"mongoose@^6.2.8":
-  "integrity" "sha512-Wq6HG0sOJEQHp5YqMlxrnf93vBFwdY2zlAwqI97EPPSt69kiVV21pTv4cDanrCNWi4upG8ajQ/p9jpDjcECjkQ=="
-  "resolved" "https://registry.npmjs.org/mongoose/-/mongoose-6.2.8.tgz"
-  "version" "6.2.8"
+"mongoose@^6.2.9":
+  "integrity" "sha512-6ApgF3rKYah5pUEO/1H+QrT0GT05OR7FprtVM45yzcrT/IKKlXizPyttrMiK1mLPt+55pGU7PMsBWY7yx/xZ4g=="
+  "resolved" "https://registry.npmjs.org/mongoose/-/mongoose-6.2.9.tgz"
+  "version" "6.2.9"
   dependencies:
     "bson" "^4.2.2"
-    "kareem" "2.3.4"
+    "kareem" "2.3.5"
     "mongodb" "4.3.1"
     "mpath" "0.8.4"
     "mquery" "4.0.2"
@@ -2275,6 +2302,11 @@
   "resolved" "https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.2.1.tgz"
   "version" "1.2.1"
 
+"promise-polyfill@^8.2.3":
+  "integrity" "sha512-Og0+jCRQetV84U8wVjMNccfGCnMQ9mGs9Hv78QFe+pSDD3gWTpz0y+1QCuxy5d/vBFuZ3iwP2eycAkvqIMPmWg=="
+  "resolved" "https://registry.npmjs.org/promise-polyfill/-/promise-polyfill-8.2.3.tgz"
+  "version" "8.2.3"
+
 "prop-types@^15.6.2", "prop-types@^15.7.2", "prop-types@^15.8.1":
   "integrity" "sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg=="
   "resolved" "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"
@@ -2294,7 +2326,7 @@
   "resolved" "https://registry.npmjs.org/queue-microtask/-/queue-microtask-1.2.3.tgz"
   "version" "1.2.3"
 
-"react-dom@^16.8.0 || ^17.0.0", "react-dom@^17.0.0", "react-dom@^17.0.2 || ^18.0.0-0", "react-dom@>=16.6.0", "react-dom@17.0.2":
+"react-dom@^16.8.0 || ^17.0.0", "react-dom@^17.0.0", "react-dom@^17.0.2 || ^18.0.0-0", "react-dom@>=16.3.0", "react-dom@>=16.6.0", "react-dom@17.0.2":
   "integrity" "sha512-s4h96KtLDUQlsENhMn1ar8t2bEa+q/YAtj8pPPdIjPDGBDIVNsrD9aXNWqspUe6AzKCIG0C1HZZLqLV7qpOBGA=="
   "resolved" "https://registry.npmjs.org/react-dom/-/react-dom-17.0.2.tgz"
   "version" "17.0.2"
@@ -2333,7 +2365,7 @@
     "loose-envify" "^1.4.0"
     "prop-types" "^15.6.2"
 
-"react@^16.8.0 || ^17 || ^18", "react@^16.8.0 || ^17.0.0", "react@^17.0.0", "react@^17.0.2 || ^18.0.0-0", "react@>= 16.8.0 || 17.x.x || 18.x.x", "react@>=16.6.0", "react@>=16.8.0", "react@17.0.2":
+"react@^16.8.0 || ^17 || ^18", "react@^16.8.0 || ^17.0.0", "react@^17.0.0", "react@^17.0.2 || ^18.0.0-0", "react@>= 16.8.0 || 17.x.x || 18.x.x", "react@>=16.3.0", "react@>=16.6.0", "react@>=16.8.0", "react@17.0.2":
   "integrity" "sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA=="
   "resolved" "https://registry.npmjs.org/react/-/react-17.0.2.tgz"
   "version" "17.0.2"
