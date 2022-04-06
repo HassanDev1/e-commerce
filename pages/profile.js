@@ -166,6 +166,7 @@ function Profile() {
                         control={control}
                         defaultValue=''
                         rules={{
+                          required: true,
                           validate: (value) =>
                             value === "" ||
                             value.length > 3 ||
@@ -195,6 +196,7 @@ function Profile() {
                         control={control}
                         defaultValue=''
                         rules={{
+                          required: true,
                           validate: (value) =>
                             value === "" ||
                             value.length > 3 ||
