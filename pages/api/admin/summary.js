@@ -5,7 +5,6 @@ import nc from 'next-connect';
 import { isAuth } from '../../../utils/auth';
 import { onError } from '../../../utils/error';
 import { connectToDatabase } from '../../../utils/db';
-import { OrderedBulkOperation } from 'mongodb';
 
 //This
 const handler = nc({
