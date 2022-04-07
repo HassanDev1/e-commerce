@@ -16,19 +16,12 @@ handler.use(isAuth, isAdmin);
 handler.get(async (req, res) => {
   const { db } = await connectToDatabase();
   //const orders = await Order.find({ user: req.user_id });
-  const ordersCount = await Order.countDocuments();
-  const productsCount = await Product.countDocuments();
-  const usersCount = await User.countDocuments();
-  const ordersPriceGroup = await Order.aggregate([
-    {
-      $group: {
-        _id: null,
-        sales:{$sum: '$totalPrice'}
-      }
-    }
-  ]);
-  const ordersPrice = ordersPriceGroup.length > 0 ? ordersPriceGroup[0].sales: 0;
-  res.send({ ordersCount, productsCount, usersCount, ordersPrice });
+  //const orders = await Order.find({}).populate('user', 'name');
+  const orders = await db
+    .collection("Orders")
+    .find({ })
+    .toArray();
+  res.send(orders);
 });
 
 export default handler;
