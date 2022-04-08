@@ -2,8 +2,8 @@ import nc from 'next-connect';
 import { isAuth, isAdmin } from '../../../utils/auth';
 import { onError } from '../../../utils/error';
 import { connectToDatabase } from '../../../utils/db';
-//import products from '../../admin/products';
-//import { OrderedBulkOperation } from 'mongodb';
+import products from '../../admin/products';
+import { OrderedBulkOperation } from 'mongodb';
 
 const handler = nc({
   onError,

@@ -34,9 +34,8 @@ function reducer(state, action) {
   }
 }
 
-function ProductEdit(params) {
+function ProductEdit({ params }) {
   const productId = params.id;
-  console.log(productId);
   const { state } = useContext(Store);
   const [{ loading, error }, dispatch] = useReducer(reducer, {
     loading: true,
@@ -60,7 +59,6 @@ function ProductEdit(params) {
       const fetchData = async () => {
         try {
           dispatch({ type: 'FETCH_REQUEST' });
-          console.log(productId);
           const { data } = await axios.get(`/api/admin/products/${productId}`, {
             headers: { authorization: `Bearer ${userInfo.token}` },
           });

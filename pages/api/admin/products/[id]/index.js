@@ -8,10 +8,9 @@ handler.use(isAuth, isAdmin);
 
 handler.get(async (req, res) => {
   const { db } = await connectToDatabase();
-  console.log(req.query._id);
   const product = await db
     .collection('Products')
-    .findOne({ _id: ObjectId(req.query._id).valueOf() });
+    .findOne({ _id: ObjectId(req.query.id) });
   res.send(product);
 });
 
