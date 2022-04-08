@@ -66,8 +66,10 @@ function AdminDashboard() {
     };
     fetchData();
   }, []);
+  const sales = orders.filter((order) => order.isPaid === true);
+  console.log(sales.length);
   return (
-    <Layout title='Order History'>
+    <Layout title='Sales'>
       <Grid container spacing={1}>
         <Grid item md={3} xs={12}>
           <Card className={classes.section}>
@@ -79,7 +81,7 @@ function AdminDashboard() {
               </NextLink>
               <NextLink href='/admin/orders' passHref>
                 <ListItem selected button component='a'>
-                  <ListItemText primary='Orders'></ListItemText>
+                  <ListItemText primary='Sales'></ListItemText>
                 </ListItem>
               </NextLink>
             </List>
@@ -113,7 +115,7 @@ function AdminDashboard() {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {orders.map((order) => (
+                        {sales.map((order) => (
                           <TableRow key={order._id}>
                             <TableCell>{order._id.substring(20, 24)}</TableCell>
                             <TableCell>

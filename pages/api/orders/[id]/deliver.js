@@ -1,32 +1,38 @@
-import nc from 'next-connect';
-import { connectToDatabase } from '../../../../utils/db';
-import onError from '../../../../utils/error';
-//import Order from '../../../../models/Order';
-import { isAuth } from '../../../../utils/auth';
+import nc from "next-connect";
+import { connectToDatabase } from "../../../../utils/db";
+import onError from "../../../../utils/error";
+import { isAuth } from "../../../../utils/auth";
+import { ObjectId } from "mongodb";
 
-//???
 const handler = nc({
   onError,
 });
 handler.use(isAuth);
 handler.put(async (req, res) => {
   const { db } = await connectToDatabase();
-  const order = await db.collection('Orders').find({});
+  const order = await db
+    .collection("Orders")
+    .find({ _id: req.query.id })
+    .toArray();
   if (order) {
     order.isDelivered = true;
     order.deliveredAt = Date.now();
+  }
+  console.log(order);
+  await db
+    .collection("Orders")
+    .updateOne(
+      { _id: ObjectId(req.query.id) },
+      { $set: { isDelivered: true, deliveredAt: Date.now() } }
+    );
 
-    //paymentResult Schema
-    //paymentResult: {id: String, status: String, email_address: String}
-    const deliveredOrder = await order.save();
-    await db.disconnect();
-    res.send({ message: 'order delivered', order: deliveredOrder });
+  if (order) {
+    res.send({ message: "order paid", order: order });
   } else {
-    await db.disconnect();
-    res.status(404).send({ message: 'order not found' });
+    res.status(404).send({ message: "order not found" });
   }
 
-  res.json(order);
+  // res.json(order);
 
   return order;
 });

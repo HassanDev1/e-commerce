@@ -16,6 +16,7 @@ import {
   Link,
   CircularProgress,
   Card,
+  Button,
   List,
   ListItem,
 } from "@material-ui/core";
@@ -49,7 +50,12 @@ function reducer(state, action) {
     case "DELIVER_FAIL":
       return { ...state, loadingDeliver: false, errorDeliver: action.payload };
     case "DELIVER_RESET":
-      return { ...state, loadingDeliver: false, successDeliver: false, errorDeliver: "" };  
+      return {
+        ...state,
+        loadingDeliver: false,
+        successDeliver: false,
+        errorDeliver: "",
+      };
     default:
       state;
   }
@@ -63,14 +69,14 @@ function Order({ params }) {
   const { state } = useContext(Store);
   const { userInfo } = state;
 
-  const [{ loading, error, order, successPay, loadingDeliver, successDeliver }, dispatch] = useReducer(
-    reducer,
-    {
-      loading: true,
-      order: {},
-      error: "",
-    }
-  );
+  const [
+    { loading, error, order, successPay, loadingDeliver, successDeliver },
+    dispatch,
+  ] = useReducer(reducer, {
+    loading: true,
+    order: {},
+    error: "",
+  });
   const {
     shippingAddress,
     paymentMethod,
@@ -101,7 +107,12 @@ function Order({ params }) {
         dispatch({ type: "FETCH_FAIL", payload: getError(err) });
       }
     };
-    if (!orderId || successPay || successDeliver || (orderId && orderId !== order._id)) {
+    if (
+      !orderId ||
+      successPay ||
+      successDeliver ||
+      (orderId && orderId !== order._id)
+    ) {
       fetchOrder();
       if (successPay) {
         dispatch({ type: "PAY_RESET" });
@@ -114,6 +125,7 @@ function Order({ params }) {
         const { data: clientId } = await axios.get("/api/keys/paypal", {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
+
         paypalDispatch({
           type: "resetOptions",
           value: {
@@ -182,7 +194,7 @@ function Order({ params }) {
     }
   }
 
-
+  const today = new Date(paidAt);
   return (
     <Layout title={`Order ${orderId}`}>
       <Typography component='h1' variant='h1'>
@@ -224,7 +236,8 @@ function Order({ params }) {
                 </ListItem>
                 <ListItem>{paymentMethod}</ListItem>
                 <ListItem>
-                  Status: {isPaid ? `paid at ${paidAt}` : "not paid"}
+                  Status:{" "}
+                  {isPaid ? `paid at ${today.toDateString()}` : "not paid"}
                 </ListItem>
               </List>
             </Card>
@@ -352,7 +365,12 @@ function Order({ params }) {
                 {userInfo.isAdmin && order.isPaid && !order.isDelivered && (
                   <ListItem>
                     {loadingDeliver && <CircularProgress />}
-                    <Button fullWidth variant="contained" color="primary" onClick={deliverOrderHandler}>
+                    <Button
+                      fullWidth
+                      variant='contained'
+                      color='primary'
+                      onClick={deliverOrderHandler}
+                    >
                       Deliver Order
                     </Button>
                   </ListItem>
