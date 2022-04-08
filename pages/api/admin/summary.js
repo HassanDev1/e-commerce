@@ -1,12 +1,12 @@
 import nc from "next-connect";
-import { isAuth } from "../../../utils/auth";
+import { isAuth, isAdmin } from "../../../utils/auth";
 import { onError } from "../../../utils/error";
 import { connectToDatabase } from "../../../utils/db";
 
 const handler = nc({
 onError,
 });
-handler.use(isAuth);
+handler.use(isAuth, isAdmin);
 
 handler.get(async (req, res) => {
 const { db } = await connectToDatabase();
