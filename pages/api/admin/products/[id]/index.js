@@ -7,17 +7,16 @@ const handler = nc();
 handler.use(isAuth, isAdmin);
 
 handler.get(async (req, res) => {
-  await db.connect();
-  const products = await Product.find({});
-  await db.disconnect();
+  const { db } = await connectToDatabase();
+  const products = await db.collection('Products').find({}).toArray();
   res.send(products);
 });
 
-handler.post(async (req, res) =>{
-  await db.connect();
-  const newProduct = new Product({
+handler.post(async (req, res) => {
+  const { db } = await connectToDatabase();
+  const product = {
     name: 'sample name',
-    slug: 'sample-slug-' + Math.random(),
+    slug: 'sample-slug-',
     image: '/image/shirt1.jpg',
     price: 0,
     category: 'sample category',
@@ -26,10 +25,9 @@ handler.post(async (req, res) =>{
     description: 'sample description',
     rating: 0,
     numReview: 0,
-  });
+  };
+  await db.collection('Products').insert(product);
 
-  const product = await newProduct.save();
-  await db.disconnect();
   res.send({ message: 'Product Created', product });
 });
 
@@ -69,16 +67,20 @@ handler.put(async (req, res) => {
   }
 });
 
-handler.delete(async (req, res) =>{
-  await db.connect();
-  const product = await Product.findById(req.quesry.id);
-  if(product){
-    await product.remove();
-    await db.disconnect();
-    await db.disconnect();
+handler.delete(async (req, res) => {
+  const { db } = await connectToDatabase();
+  const product = await db
+    .collection('Products')
+    .findOne({ _id: ObjectId(req.query.id) });
+  if (product) {
+    await db.collection('Products').remove(
+      { _id: ObjectId(req.query.id) },
+      {
+        justOne: true,
+      }
+    );
     res.send({ message: 'Product Deleted' });
   } else {
-    await db.disconnect();
     res.status(404).send({ message: 'Product Not Found' });
   }
 });
