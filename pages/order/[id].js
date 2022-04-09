@@ -49,6 +49,16 @@ function reducer(state, action) {
       return { ...state, loadingDeliver: false, successDeliver: true };
     case 'DELIVER_FAIL':
       return { ...state, loadingDeliver: false, errorDeliver: action.payload };
+    case 'UPLOAD_REQUEST':
+      return{ ...state, loadingUpload: true, errorUpload: '' };
+    case 'UPLOAD_SUCCESS':
+      return {
+        ...state,
+        loadingUpload: false,
+        errorUploadL '',
+      };
+    case 'UPLOAD_FAIL':
+      return { ...state, loadingUpload: false, errorUpload: action.payload };
     case 'DELIVER_RESET':
       return {
         ...state,
@@ -70,13 +80,27 @@ function Order({ params }) {
   const { userInfo } = state;
 
   const [
-    { loading, error, order, successPay, loadingDeliver, successDeliver },
+    { loading, error, order, successPay, loadingDeliver, loadingUpload, successDeliver },
     dispatch,
   ] = useReducer(reducer, {
     loading: true,
     order: {},
     error: '',
   });
+  const uploadHandler = async (e) => {
+    const file = e.target.files[0];
+    const bodyFormData = new FormData();
+    bodyFormData.append('file', file);
+    try{
+      dispatch({type: 'UPLOAD_REQUEST'});
+      const {data } = await axios.post('/api/admin/upload', bodyFormData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          authorization: 'Bearer ${userInfo.token}',
+        },
+      });
+    } catch (err) {}
+  };
   const {
     shippingAddress,
     paymentMethod,
@@ -262,6 +286,33 @@ function Order({ params }) {
                             <TableCell>
                               <NextLink href={`/product/${item.slug}`} passHref>
                                 <Link>
+                                <Controller
+                                  name="image"
+                                  control={control}
+                                  defualtValue=""
+                                  rules={{
+                                    required: true,
+                                  }}
+                                  render={({ field }) => (
+                                    <TextField
+                                      variant="outlined"
+                                      fullWidth
+                                      id="image"
+                                      label="image"
+                                      error={Boolean(errors.image)}
+                                      helperText={errors.image ? 'Image is required' : ''}
+                                      {...field}
+                                    ></TextField>
+                                  )}
+                                  ></Controller>
+                                </ListItem>
+                                <ListItem>
+                                  <Button variant="contained" component="label">
+                                    Upload File
+                                    <input type="file" onChange={uploadHandler} hidden />
+                                  </Button>
+                                </ListItem>
+                                <ListItem>
                                   <Image
                                     src={item.image}
                                     alt={item.name}
