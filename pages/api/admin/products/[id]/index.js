@@ -6,6 +6,13 @@ import { ObjectId } from 'mongodb';
 const handler = nc();
 handler.use(isAuth, isAdmin);
 
+handler.get(async (req, res) => {
+  await db.connect();
+  const products = await Product.find({});
+  await db.disconnect();
+  res.send(products);
+});
+
 handler.post(async (req, res) =>{
   await db.connect();
   const newProduct = new Product({
@@ -59,6 +66,20 @@ handler.put(async (req, res) => {
     res.send({ message: 'Product updated succesfully!' });
   } else {
     res.statusCode(404).send({ message: 'Product not found' });
+  }
+});
+
+handler.delete(async (req, res) =>{
+  await db.connect();
+  const product = await Product.findById(req.quesry.id);
+  if(product){
+    await product.remove();
+    await db.disconnect();
+    await db.disconnect();
+    res.send({ message: 'Product Deleted' });
+  } else {
+    await db.disconnect();
+    res.status(404).send({ message: 'Product Not Found' });
   }
 });
 
