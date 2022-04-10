@@ -59,8 +59,15 @@ function AdminDashboard() {
   const classes = useStyles();
   const { userInfo } = state;
 
+<<<<<<< HEAD
   const [{ loading, error, products, loadingCreate, successDelete, loadingDelete }, 
     dispatch] = useReducer(reducer, {
+=======
+  const [
+    { loading, error, products, loadingCreate, successDelete, loadingDelete },
+    dispatch,
+  ] = useReducer(reducer, {
+>>>>>>> 9a775b0ef58f4da68d46fcc00b91d336ba7afc18
     loading: true,
     products: [],
     error: '',
@@ -81,35 +88,44 @@ function AdminDashboard() {
         dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
       }
     };
+<<<<<<< HEAD
     if(successDelete){
       dispatch({ type: 'DELETE_RESET'});
+=======
+    if (successDelete) {
+      dispatch({ type: 'DELETE_RESET' });
+>>>>>>> 9a775b0ef58f4da68d46fcc00b91d336ba7afc18
     } else {
       fetchData();
     }
   }, [successDelete]);
   const { enqueueSnackbar } = useSnackbar();
   const createHandler = async () => {
-    if (!Window.confirm('Are you Sure?')){
+    if (!window.confirm('Are you Sure?')) {
       return;
     }
     try {
       dispatch({ type: 'CREATE_REQUEST' });
       const { data } = await axios.post(
-        '/api/admin/products',
+        `/api/admin/products`,
         {},
         {
-          headers: { authorization: 'Bearer ${userInfo.token}' },
+          headers: { authorization: `Bearer ${userInfo.token}` },
         }
       );
       dispatch({ type: 'CREATE_SUCCESS' });
       enqueueSnackbar('Product created successfully', { variant: 'success' });
-    } catch(err) {
+    } catch (err) {
       dispatch({ type: 'CREATE_FAIL' });
       enqueueSnackbar(getError(err), { variant: 'error' });
     }
   };
   const deleteHandler = async (productId) => {
+<<<<<<< HEAD
     if (!window.confirm('Are you sure?')) {
+=======
+    if (!window.confirm('Are you Sure?')) {
+>>>>>>> 9a775b0ef58f4da68d46fcc00b91d336ba7afc18
       return;
     }
     try {
@@ -159,7 +175,7 @@ function AdminDashboard() {
               <ListItem>
                 <Grid container alignItems="center">
                   <Grid item xs={6}>
-                    <Typography component="h1" variant="h1">
+                    <Typography component="h2" variant="h2">
                       Products
                     </Typography>
                     {loadingDelete && <CircularProgress />}
@@ -176,7 +192,10 @@ function AdminDashboard() {
                   </Grid>
                 </Grid>
               </ListItem>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9a775b0ef58f4da68d46fcc00b91d336ba7afc18
               <ListItem>
                 {loading ? (
                   <CircularProgress />
