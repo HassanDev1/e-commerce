@@ -290,35 +290,8 @@ function Order({ params }) {
                         {orderItems.map((item) => (
                           <TableRow key={item._id}>
                             <TableCell>
-                              <NextLink href={`/product/${item.slug}`} passHref>
+                            <NextLink href={`/product/${item.slug}`} passHref>
                                 <Link>
-                                <Controller
-                                  name="image"
-                                  control={control}
-                                  defualtValue=""
-                                  rules={{
-                                    required: true,
-                                  }}
-                                  render={({ field }) => (
-                                    <TextField
-                                      variant="outlined"
-                                      fullWidth
-                                      id="image"
-                                      label="image"
-                                      error={Boolean(errors.image)}
-                                      helperText={errors.image ? 'Image is required' : ''}
-                                      {...field}
-                                    ></TextField>
-                                  )}
-                                  ></Controller>
-                                </ListItem>
-                                <ListItem>
-                                  <Button variant="contained" component="label">
-                                    Upload File
-                                    <input type="file" onChange={uploadHandler} hidden />
-                                  </Button>
-                                </ListItem>
-                                <ListItem>
                                   <Image
                                     src={item.image}
                                     alt={item.name}

@@ -135,7 +135,7 @@ function ProductEdit({ params }) {
                 </ListItem>
               </NextLink>
               <NextLink href="/admin/products" passHref>
-                <ListItem selcted button component="a">
+                <ListItem selected button component="a">
                   <ListItemText primary="Products"></ListItemText>
                 </ListItem>
               </NextLink>
@@ -244,9 +244,62 @@ function ProductEdit({ params }) {
                             {...field}
                           ></TextField>
                         )}
-                      ></Controller>
-                    </ListItem>
-                    <ListItem>
+                        ></Controller>
+                        </ListItem>
+                        <ListItem>
+                          <Button variant="contained" component="label">
+                            Upload File
+                            <input type="file" onChange={uploadHandler} hidden />
+                          </Button>
+                          {loadingUpload && <CircularProgress />}
+                        </ListItem>
+                        <ListItem>
+                          <FormControlLabel
+                            label="Is Featured"
+                            control={
+                              <Checkbox
+                                onClick={(e) => setIsFeatured(e.target.checked)}
+                                checked={isFeatured}
+                                name="isFeatured"
+                              />
+                            }
+                          ></FormControlLabel>
+                        </ListItem>
+                        <ListItem>
+                          <Controller
+                            name="featuredImage"
+                            control={control}
+                            defaultValue=""
+                            rules={{
+                              required: true,
+                            }}
+                            render={({ field }) => (
+                              <TextField
+                                variant="outlined"
+                                fullWidth
+                                id="featuredImage"
+                                label="Featured Image"
+                                error={Boolean(errors.image)}
+                                helperText={
+                                  errors.image ? 'Featured Image is required' : ''
+                                }
+                                {...field}
+                              ></TextField>
+                            )}
+                          ></Controller>
+                        </ListItem>
+                        <ListItem>
+                          <Button variant="contained" component="label">
+                            Upload File
+                            <input
+                              type="file"
+                              onChange={(e) => uploadHandler(e, 'featuredImage')}
+                              hidden
+                            />
+                          </Button>
+                          {loadingUpload && <CircularProgress />}
+                        </ListItem>
+                        <ListItem>
                       <Controller
                         name="category"
                         control={control}
