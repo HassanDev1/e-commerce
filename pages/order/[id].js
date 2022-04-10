@@ -49,16 +49,6 @@ function reducer(state, action) {
       return { ...state, loadingDeliver: false, successDeliver: true };
     case 'DELIVER_FAIL':
       return { ...state, loadingDeliver: false, errorDeliver: action.payload };
-    case 'UPLOAD_REQUEST':
-      return{ ...state, loadingUpload: true, errorUpload: '' };
-    case 'UPLOAD_SUCCESS':
-      return {
-        ...state,
-        loadingUpload: false,
-        errorUploadL '',
-      };
-    case 'UPLOAD_FAIL':
-      return { ...state, loadingUpload: false, errorUpload: action.payload };
     case 'DELIVER_RESET':
       return {
         ...state,
@@ -87,26 +77,6 @@ function Order({ params }) {
     order: {},
     error: '',
   });
-  const uploadHandler = async (e) => {
-    const file = e.target.files[0];
-    const bodyFormData = new FormData();
-    bodyFormData.append('file', file);
-    try{
-      dispatch({type: 'UPLOAD_REQUEST'});
-      const {data } = await axios.post('/api/admin/upload', bodyFormData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          authorization: 'Bearer ${userInfo.token}',
-        },
-      });
-      dispatch({ type: 'UPLOAD_SUCCESS' });
-      setValue('image', data.secure_url);
-      enqueueSnackbar('File uploaded successfully', { variant: 'success' });      
-    } catch (err) {
-      dispatch({ type: 'UPLOAD_FAIL', payload: getError(err) });
-      enqueueSnackbar(getError(err), { variant: 'error' });   
-    }
-  };
   const {
     shippingAddress,
     paymentMethod,
@@ -301,7 +271,6 @@ function Order({ params }) {
                                 </Link>
                               </NextLink>
                             </TableCell>
-
                             <TableCell>
                               <NextLink href={`/product/${item.slug}`} passHref>
                                 <Link>
