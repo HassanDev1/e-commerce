@@ -58,7 +58,7 @@ function AdminDashboard() {
   const classes = useStyles();
   const { userInfo } = state;
 
-  const [{ loading, error, products, loadingCreate, successDelete }, dispatch] = useReducer(reducer, {
+  const [{ loading, error, products, loadingCreate, successDelete, loadingDelete }, dispatch] = useReducer(reducer, {
     loading: true,
     products: [],
     error: '',
