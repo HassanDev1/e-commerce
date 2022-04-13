@@ -31,7 +31,7 @@ handler.put(async (req, res) => {
     );
 
   if (order) {
-    res.send({ message: "order paid", order: paidOrder });
+    res.send({ message: "order paid", order: order });
   } else {
     res.status(404).send({ message: "order not found" });
   }

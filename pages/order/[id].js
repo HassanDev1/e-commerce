@@ -192,7 +192,7 @@ function Order({ params }) {
       enqueueSnackbar(getError(err), { variant: "error" });
     }
   }
-  const today = new Date(paidAt);
+
   return (
     <Layout title={`Order ${orderId}`}>
       <Typography component='h1' variant='h1'>
