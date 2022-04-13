@@ -165,7 +165,7 @@ function AdminUsers() {
                             </TableCell>
                             <TableCell>{user.name}</TableCell>
                             <TableCell>{user.email}</TableCell>
-                            <TableCell>{user.isAdmin}</TableCell>
+                            <TableCell>{user.isAdmin ? 'YES' : 'NO'}</TableCell>
                             <TableCell>
                               <NextLink
                                 href={`/admin/user/${user._id}`}
