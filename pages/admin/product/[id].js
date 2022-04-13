@@ -2,7 +2,7 @@ import axios from 'axios';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import React, { useEffect, useContext, useReducer } from 'react';
+import React, { useEffect, useContext, useReducer, useState } from 'react';
 import {
   Grid,
   List,
@@ -13,6 +13,8 @@ import {
   ListItemText,
   TextField,
   CircularProgress,
+  FormControlLabel,
+  Checkbox,
 } from '@material-ui/core';
 import { getError } from '../../../utils/error';
 import { Store } from '../../../utils/Store';
@@ -36,24 +38,25 @@ function reducer(state, action) {
     case 'UPDATE_FAIL':
       return { ...state, loadingUpdate: false, errorUpdate: action.payload };
     case 'UPLOAD_REQUEST':
-        return { ...state, loadingUpload: true, errorUpload: '' };
+      return { ...state, loadingUpload: true, errorUpload: '' };
     case 'UPLOAD_SUCCESS':
-        return {...state, loadingUpload: false, errorUpload: '' };
+      return { ...state, loadingUpload: false, errorUpload: '' };
     case 'UPLOAD_FAIL':
-        return {...state, loadingUpload: false, errorUpload: action.payload };
-  
+      return { ...state, loadingUpload: false, errorUpload: action.payload };
+
     default:
-        return state;
-    }
+      return state;
   }
+}
 
 function ProductEdit({ params }) {
   const productId = params.id;
   const { state } = useContext(Store);
-  const [{ loading, error, loadingUpdate }, dispatch] = useReducer(reducer, {
-    loading: true,
-    error: '',
-  });
+  const [{ loading, error, loadingUpdate, loadingUpload }, dispatch] =
+    useReducer(reducer, {
+      loading: true,
+      error: '',
+    });
   const {
     handleSubmit,
     control,
@@ -279,7 +282,7 @@ function ProductEdit({ params }) {
                       ></Controller>
                     </ListItem>
                     <ListItem>
-                    <Button variant="contained" component="label">
+                      <Button variant="contained" component="label">
                         Upload File
                         <input type="file" onChange={uploadHandler} hidden />
                       </Button>

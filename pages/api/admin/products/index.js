@@ -1,35 +1,32 @@
 import nc from 'next-connect';
 import { isAdmin, isAuth } from '../../../../utils/auth';
-import Product from '../../../../models/Product';
-import db from '../../../../utils/db';
+import { connectToDatabase } from '../../../../utils/db';
 
 const handler = nc();
 handler.use(isAuth, isAdmin);
 
 handler.get(async (req, res) => {
-  await db.connect();
-  const products = await Product.find({});
-  await db.disconnect();
+  const { db } = await connectToDatabase();
+  const products = await db.collection('Products').find({}).toArray();
   res.send(products);
 });
 
 handler.post(async (req, res) => {
-  await db.connect();
-  const newProduct = new Product({
+  const { db } = await connectToDatabase();
+  const product = {
     name: 'sample name',
-    slug: 'sample-slug-' + Math.random(),
-    image: '/images/shirt1.jpg',
+    slug: 'sample-slug-',
+    image: '/image/shirt1.jpg',
     price: 0,
     category: 'sample category',
     brand: 'sample brand',
     countInStock: 0,
     description: 'sample description',
     rating: 0,
-    numReviews: 0,
-  });
+    numReview: 0,
+  };
+  await db.collection('Products').insertOne(product);
 
-  const product = await newProduct.save();
-  await db.disconnect();
   res.send({ message: 'Product Created', product });
 });
 
