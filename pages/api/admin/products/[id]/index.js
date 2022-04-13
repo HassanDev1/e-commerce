@@ -42,4 +42,21 @@ handler.put(async (req, res) => {
   }
 });
 
+handler.delete(async (req, res) => {
+  const { db } = await connectToDatabase();
+  const product = await db
+    .collection('Products')
+    .findOne({ _id: ObjectId(req.query.id) });
+  if (product) {
+    await db.collection('Products').deleteOne(
+      { _id: ObjectId(req.query.id) },
+      {
+        justOne: true,
+      }
+    );
+    res.send({ message: 'Product Deleted' });
+  } else {
+    res.status(404).send({ message: 'Product Not Found' });
+  }
+});
 export default handler;
