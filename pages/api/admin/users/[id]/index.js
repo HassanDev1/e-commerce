@@ -26,13 +26,7 @@ handler.put(async (req, res) => {
       {
         $set: {
           name: req.body.name,
-          slug: req.body.slug,
-          price: req.body.price,
-          category: req.body.category,
-          image: req.body.image,
-          brand: req.body.brand,
-          countInStock: req.body.countInStock,
-          description: req.body.description,
+          isAdmin: Boolean(req.body.isAdmin)
         },
       }
     );
