@@ -8,16 +8,16 @@ import {
   Grid,
   List,
   ListItem,
-  TableContainer,
   Typography,
   Card,
+  Button,
+  ListItemText,
+  TableContainer,
   Table,
   TableHead,
   TableRow,
   TableCell,
   TableBody,
-  Button,
-  ListItemText,
 } from '@material-ui/core';
 import { getError } from '../../utils/error';
 import { Store } from '../../utils/Store';
@@ -58,7 +58,10 @@ function AdminDashboard() {
   const classes = useStyles();
   const { userInfo } = state;
 
-  const [{ loading, error, products, loadingCreate, successDelete, loadingDelete }, dispatch] = useReducer(reducer, {
+  const [
+    { loading, error, products, loadingCreate, successDelete, loadingDelete },
+    dispatch,
+  ] = useReducer(reducer, {
     loading: true,
     products: [],
     error: '',
@@ -152,11 +155,13 @@ function AdminDashboard() {
           <Card className={classes.section}>
             <List>
               <ListItem>
-                <Typography component="h2" variant="h2">
-                  Products
-                </Typography>
-                {loadingDelete && <CircularProgress />}
-                  <Grid>
+                <Grid container alignItems="center">
+                  <Grid item xs={6}>
+                    <Typography component="h2" variant="h2">
+                      Products
+                    </Typography>
+                    {loadingDelete && <CircularProgress />}
+                  </Grid>
                   <Grid align="right" item xs={6}>
                     <Button
                       onClick={createHandler}
@@ -169,6 +174,7 @@ function AdminDashboard() {
                   </Grid>
                 </Grid>
               </ListItem>
+
               <ListItem>
                 {loading ? (
                   <CircularProgress />

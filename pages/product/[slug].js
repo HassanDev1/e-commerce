@@ -14,7 +14,7 @@ import useStyles from '../../utils/styles';
 import { connectToDatabase } from '../../utils/db';
 import { useContext } from 'react';
 import { Store } from '../../utils/Store';
-//import axios from 'axios';
+import axios from 'axios';
 import { useRouter } from 'next/router';
 
 export default function ProductScreen(props) {
@@ -28,15 +28,16 @@ export default function ProductScreen(props) {
   const addToCartHandler = async () => {
     const existItem = state.cart.cartItems.find((x) => x._id === product._id);
     const quantity = existItem ? existItem.quantity + 1 : 1;
-    /*const { data } = await axios.get(`/api/products/${product._id}`);
+    const { data } = await axios.get(`/api/products/${product.id}`);
     if (data.countInStock < quantity) {
       window.alert('Sorry, this product is out of stock at the moment.');
       return;
-    }*/
+    }
 
     dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity } });
     router.push('/cart');
   };
+
   return (
     <Layout title={product.name} description={product.description}>
       <div className={classes.section}>
@@ -105,14 +106,26 @@ export default function ProductScreen(props) {
                 </Grid>
               </ListItem>
               <ListItem>
-                <Button
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  onClick={addToCartHandler}
-                >
-                  Add to cart
-                </Button>
+                {product.countInStock > 0 ? (
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    onClick={addToCartHandler}
+                  >
+                    Add to cart
+                  </Button>
+                ) : (
+                  <Button
+                    disabled="true"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    onClick={addToCartHandler}
+                  >
+                    Out of stock
+                  </Button>
+                )}
               </ListItem>
             </List>
           </Card>

@@ -2,7 +2,7 @@ import axios from 'axios';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import React, { useEffect, useContext, useReducer, useState } from 'react';
+import React, { useEffect, useContext, useReducer } from 'react';
 import {
   Grid,
   List,
@@ -13,8 +13,6 @@ import {
   ListItemText,
   TextField,
   CircularProgress,
-  FormControlLabel,
-  Checkbox,
 } from '@material-ui/core';
 import { getError } from '../../../utils/error';
 import { Store } from '../../../utils/Store';
@@ -40,7 +38,11 @@ function reducer(state, action) {
     case 'UPLOAD_REQUEST':
       return { ...state, loadingUpload: true, errorUpload: '' };
     case 'UPLOAD_SUCCESS':
-      return { ...state, loadingUpload: false, errorUpload: '' };
+      return {
+        ...state,
+        loadingUpload: false,
+        errorUpload: '',
+      };
     case 'UPLOAD_FAIL':
       return { ...state, loadingUpload: false, errorUpload: action.payload };
 
@@ -94,7 +96,7 @@ function ProductEdit({ params }) {
       fetchData();
     }
   }, []);
-  const uploadHandler = async (e, imageField = 'image') => {
+  const uploadHandler = async (e) => {
     const file = e.target.files[0];
     const bodyFormData = new FormData();
     bodyFormData.append('file', file);
@@ -107,7 +109,7 @@ function ProductEdit({ params }) {
         },
       });
       dispatch({ type: 'UPLOAD_SUCCESS' });
-      setValue(imageField, data.secure_url);
+      setValue('image', data.secure_url);
       enqueueSnackbar('File uploaded successfully', { variant: 'success' });
     } catch (err) {
       dispatch({ type: 'UPLOAD_FAIL', payload: getError(err) });
@@ -150,9 +152,6 @@ function ProductEdit({ params }) {
       enqueueSnackbar(getError(err), { variant: 'error' });
     }
   };
-
-  const [isFeatured, setIsFeatured] = useState(false);
-
   return (
     <Layout title={`Edit Product ${productId}`}>
       <Grid container spacing={1}>
@@ -170,7 +169,7 @@ function ProductEdit({ params }) {
                 </ListItem>
               </NextLink>
               <NextLink href="/admin/products" passHref>
-                <ListItem selcted button component="a">
+                <ListItem selected button component="a">
                   <ListItemText primary="Products"></ListItemText>
                 </ListItem>
               </NextLink>
@@ -289,52 +288,6 @@ function ProductEdit({ params }) {
                       {loadingUpload && <CircularProgress />}
                     </ListItem>
                     <ListItem>
-                      <FormControlLabel
-                        label="Is Featured"
-                        control={
-                          <Checkbox
-                            onClick={(e) => setIsFeatured(e.target.checked)}
-                            checked={isFeatured}
-                            name="isFeatured"
-                          />
-                        }
-                      ></FormControlLabel>
-                    </ListItem>
-                    <ListItem>
-                      <Controller
-                        name="featuredImage"
-                        control={control}
-                        defaultValue=""
-                        rules={{
-                          required: true,
-                        }}
-                        render={({ field }) => (
-                          <TextField
-                            variant="outlined"
-                            fullWidth
-                            id="featuredImage"
-                            label="Featured Image"
-                            error={Boolean(errors.image)}
-                            helperText={
-                              errors.image ? 'Featured Image is required' : ''
-                            }
-                            {...field}
-                          ></TextField>
-                        )}
-                      ></Controller>
-                    </ListItem>
-                    <ListItem>
-                      <Button variant="contained" component="label">
-                        Upload File
-                        <input
-                          type="file"
-                          onChange={(e) => uploadHandler(e, 'featuredImage')}
-                          hidden
-                        />
-                      </Button>
-                      {loadingUpload && <CircularProgress />}
-                    </ListItem>
-                    <ListItem>
                       <Controller
                         name="category"
                         control={control}
@@ -429,6 +382,7 @@ function ProductEdit({ params }) {
                         )}
                       ></Controller>
                     </ListItem>
+
                     <ListItem>
                       <Button
                         variant="contained"
@@ -456,4 +410,5 @@ export async function getServerSideProps({ params }) {
     props: { params },
   };
 }
+
 export default dynamic(() => Promise.resolve(ProductEdit), { ssr: false });

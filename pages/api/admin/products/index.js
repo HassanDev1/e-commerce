@@ -16,7 +16,7 @@ handler.post(async (req, res) => {
   const product = {
     name: 'sample name',
     slug: 'sample-slug-',
-    image: '/image/shirt1.jpg',
+    image: '/public/images/t-shirt1.jpg',
     price: 0,
     category: 'sample category',
     brand: 'sample brand',

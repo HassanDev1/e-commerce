@@ -55,13 +55,24 @@ export default function Home(props) {
                 <CardActions>
                   <Typography>
                     ${product.price}
-                    <Button
-                      size="small"
-                      color="primary"
-                      onClick={() => addToCartHandler(product)}
-                    >
-                      Add to Cart
-                    </Button>
+                    {product.countInStock > 0 ? (
+                      <Button
+                        size="small"
+                        color="primary"
+                        onClick={() => addToCartHandler(product)}
+                      >
+                        Add to Cart
+                      </Button>
+                    ) : (
+                      <Button
+                        disabled="true"
+                        size="small"
+                        color="primary"
+                        onClick={() => addToCartHandler(product)}
+                      >
+                        Out of stock
+                      </Button>
+                    )}
                   </Typography>
                 </CardActions>
               </Card>
