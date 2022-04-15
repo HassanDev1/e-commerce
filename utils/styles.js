@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
   toolbar: {
     justifyContent: 'space-between',
   },
+  mt1: { marginTop: '1rem' },
   menuButton: { padding: 0 },
   searchSection: {
     display: 'none',
@@ -72,6 +73,9 @@ const useStyles = makeStyles((theme) => ({
     '& span': {
       color: '#000000',
     },
+  },
+  sort: {
+    marginRight: 5,
   },
 }));
 export default useStyles;
