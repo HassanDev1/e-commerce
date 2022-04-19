@@ -40,7 +40,7 @@ export default function ProductItem({ product, addToCartHandler }) {
             </Button>
           ) : (
             <Button
-              disabled="true"
+              disabled={true}
               size="small"
               color="primary"
               onClick={() => addToCartHandler(product)}

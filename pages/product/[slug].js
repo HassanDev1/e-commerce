@@ -117,7 +117,7 @@ export default function ProductScreen(props) {
                   </Button>
                 ) : (
                   <Button
-                    disabled="true"
+                    disabled={true}
                     fullWidth
                     variant="contained"
                     color="primary"

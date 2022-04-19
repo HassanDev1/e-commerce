@@ -1,8 +1,8 @@
-import axios from "axios";
-import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
-import NextLink from "next/link";
-import React, { useEffect, useContext, useReducer } from "react";
+import axios from 'axios';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
+import NextLink from 'next/link';
+import React, { useEffect, useContext, useReducer } from 'react';
 import {
   CircularProgress,
   Grid,
@@ -18,19 +18,19 @@ import {
   TableBody,
   Button,
   ListItemText,
-} from "@material-ui/core";
-import { getError } from "../../utils/error";
-import { Store } from "../../utils/Store";
-import Layout from "../../components/Layout";
-import useStyles from "../../utils/styles";
+} from '@material-ui/core';
+import { getError } from '../../utils/error';
+import { Store } from '../../utils/Store';
+import Layout from '../../components/Layout';
+import useStyles from '../../utils/styles';
 
 function reducer(state, action) {
   switch (action.type) {
-    case "FETCH_REQUEST":
-      return { ...state, loading: true, error: "" };
-    case "FETCH_SUCCESS":
-      return { ...state, loading: false, orders: action.payload, error: "" };
-    case "FETCH_FAIL":
+    case 'FETCH_REQUEST':
+      return { ...state, loading: true, error: '' };
+    case 'FETCH_SUCCESS':
+      return { ...state, loading: false, orders: action.payload, error: '' };
+    case 'FETCH_FAIL':
       return { ...state, loading: false, error: action.payload };
     default:
       state;
@@ -46,50 +46,55 @@ function AdminDashboard() {
   const [{ loading, error, orders }, dispatch] = useReducer(reducer, {
     loading: true,
     orders: [],
-    error: "",
+    error: '',
   });
 
   useEffect(() => {
     if (!userInfo) {
-      router.push("/login");
+      router.push('/login');
     }
     const fetchData = async () => {
       try {
-        dispatch({ type: "FETCH_REQUEST" });
+        dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(`/api/admin/orders`, {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
-        dispatch({ type: "FETCH_SUCCESS", payload: data });
+        dispatch({ type: 'FETCH_SUCCESS', payload: data });
       } catch (err) {
-        dispatch({ type: "FETCH_FAIL", payload: getError(err) });
+        dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
       }
     };
     fetchData();
   }, []);
   return (
-    <Layout title='Order History'>
+    <Layout title="Order History">
       <Grid container spacing={1}>
         <Grid item md={3} xs={12}>
           <Card className={classes.section}>
             <List>
-              <NextLink href='/admin/dashboard' passHref>
-                <ListItem button component='a'>
-                  <ListItemText primary='Admin Dashboard'></ListItemText>
+              <NextLink href="/admin/dashboard" passHref>
+                <ListItem button component="a">
+                  <ListItemText primary="Admin Dashboard"></ListItemText>
                 </ListItem>
               </NextLink>
-              <NextLink href='/admin/orders' passHref>
-                <ListItem selected button component='a'>
-                  <ListItemText primary='Orders'></ListItemText>
+              <NextLink href="/admin/orders" passHref>
+                <ListItem selected button component="a">
+                  <ListItemText primary="Orders"></ListItemText>
                 </ListItem>
               </NextLink>
-              <NextLink href='/admin/products' passHref>
-                <ListItem button component='a'>
-                  <ListItemText primary='Products'></ListItemText>
+              <NextLink href="/admin/products" passHref>
+                <ListItem button component="a">
+                  <ListItemText primary="Products"></ListItemText>
                 </ListItem>
               </NextLink>
               <NextLink href="/admin/users" passHref>
                 <ListItem button component="a">
                   <ListItemText primary="Users"></ListItemText>
+                </ListItem>
+              </NextLink>
+              <NextLink href="/admin/discounts" passHref>
+                <ListItem button component="a">
+                  <ListItemText primary="Discount Codes"></ListItemText>
                 </ListItem>
               </NextLink>
             </List>
@@ -99,7 +104,7 @@ function AdminDashboard() {
           <Card className={classes.section}>
             <List>
               <ListItem>
-                <Typography component='h2' variant='h2'>
+                <Typography component="h2" variant="h2">
                   Orders
                 </Typography>
               </ListItem>
@@ -127,7 +132,7 @@ function AdminDashboard() {
                           <TableRow key={order._id}>
                             <TableCell>{order._id.substring(20, 24)}</TableCell>
                             <TableCell>
-                              {order.user ? order.user.name : "DELETED USER"}
+                              {order.user ? order.user.name : 'DELETED USER'}
                             </TableCell>
                             <TableCell>{order.createdAt}</TableCell>
                             <TableCell>${order.totalPrice}</TableCell>
@@ -136,18 +141,18 @@ function AdminDashboard() {
                                 ? `paid at ${new Date(
                                     order.paidAt
                                   ).toDateString()}`
-                                : "not paid"}
+                                : 'not paid'}
                             </TableCell>
                             <TableCell>
                               {order.isDelivered
                                 ? `delivered at ${new Date(
                                     order.deliveredAt
                                   ).toDateString()}`
-                                : "not delivered"}
+                                : 'not delivered'}
                             </TableCell>
                             <TableCell>
                               <NextLink href={`/order/${order._id}`} passHref>
-                                <Button variant='contained'>Details</Button>
+                                <Button variant="contained">Details</Button>
                               </NextLink>
                             </TableCell>
                           </TableRow>
