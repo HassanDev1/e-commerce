@@ -15,10 +15,10 @@ import Layout from '../components/Layout';
 import ProductItem from '../components/ProductItem';
 import { Store } from '../utils/Store';
 import { connectToDatabase } from '../utils/db';
-//import Product from '../models/Product';
 import useStyles from '../utils/styles';
 import axios from 'axios';
 import { Rating } from '@mui/material';
+import { Pagination } from '@material-ui/lab';
 
 const PAGE_SIZE = 3;
 
@@ -50,7 +50,12 @@ export default function Search(props) {
     rating = 'all',
     sort = 'featured',
   } = router.query;
-  const { products, countProducts, categories, brands, pages } = props;
+  const products = props.productDocs;
+  const countProducts = props.countProducts;
+  const categories = props.categories;
+  const brands = props.brands;
+  const pages = props.pages;
+
   const filterSearch = ({
     page,
     category,
@@ -227,7 +232,7 @@ export default function Search(props) {
 }
 
 export async function getServerSideProps({ query }) {
-  const db = await connectToDatabase();
+  const { db } = await connectToDatabase();
   const pageSize = query.pageSize || PAGE_SIZE;
   const page = query.page || 1;
   const category = query.category || '';
@@ -279,35 +284,38 @@ export async function getServerSideProps({ query }) {
       ? { createdAt: -1 }
       : { _id: -1 };
   //Here
-  const categories = await Product.find().distinct('category');
-  const brands = await Product.find().distinct('brand');
-  const productDocs = await Product.find(
-    {
+
+  const categories = await db.collection('Products').distinct('category');
+
+  const brands = await db.collection('Products').distinct('brand');
+
+  let productDocs = await db
+    .collection('Products')
+    .find({
       ...queryFilter,
       ...categoryFilter,
       ...priceFilter,
       ...brandFilter,
       ...ratingFilter,
-    },
-    '-reviews'
-  )
+    })
     .sort(order)
     .skip(pageSize * (page - 1))
     .limit(pageSize)
-    .lean();
-  const countProducts = await Product.countDocuments({
+    .toArray();
+
+  const countProducts = await db.collection('Products').countDocuments({
     ...queryFilter,
     ...categoryFilter,
     ...priceFilter,
     ...brandFilter,
     ...ratingFilter,
   });
-  //await db.disconnect
 
-  const products = productDocs.map(db.convertDocToObj);
+  productDocs = await JSON.parse(JSON.stringify(productDocs));
+
   return {
     props: {
-      products,
+      productDocs,
       countProducts,
       page,
       pages: Math.ceil(countProducts / pageSize),
