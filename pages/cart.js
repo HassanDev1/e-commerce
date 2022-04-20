@@ -30,6 +30,7 @@ function CartScreen() {
   const {
     cart: { cartItems },
   } = state;
+
   const updateCartHandler = async (item, quantity) => {
     const { data } = await axios.get(`/api/products/${item._id}`);
     if (data.countInStock < quantity) {
@@ -44,6 +45,7 @@ function CartScreen() {
   const checkoutHandler = () => {
     router.push('/shipping');
   };
+
   return (
     <Layout title="Shopping Cart">
       <Typography component="h2" variant="h2">

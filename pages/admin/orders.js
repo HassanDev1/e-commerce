@@ -8,16 +8,16 @@ import {
   Grid,
   List,
   ListItem,
-  TableContainer,
   Typography,
   Card,
+  Button,
+  ListItemText,
+  TableContainer,
   Table,
   TableHead,
   TableRow,
   TableCell,
   TableBody,
-  Button,
-  ListItemText,
 } from '@material-ui/core';
 import { getError } from '../../utils/error';
 import { Store } from '../../utils/Store';
@@ -37,7 +37,7 @@ function reducer(state, action) {
   }
 }
 
-function AdminDashboard() {
+function AdminOrders() {
   const { state } = useContext(Store);
   const router = useRouter();
   const classes = useStyles();
@@ -67,7 +67,7 @@ function AdminDashboard() {
     fetchData();
   }, []);
   return (
-    <Layout title="Order History">
+    <Layout title="Orders">
       <Grid container spacing={1}>
         <Grid item md={3} xs={12}>
           <Card className={classes.section}>
@@ -92,11 +92,6 @@ function AdminDashboard() {
                   <ListItemText primary="Users"></ListItemText>
                 </ListItem>
               </NextLink>
-              <NextLink href="/admin/discounts" passHref>
-                <ListItem button component="a">
-                  <ListItemText primary="Discount Codes"></ListItemText>
-                </ListItem>
-              </NextLink>
             </List>
           </Card>
         </Grid>
@@ -108,6 +103,7 @@ function AdminDashboard() {
                   Orders
                 </Typography>
               </ListItem>
+
               <ListItem>
                 {loading ? (
                   <CircularProgress />
@@ -138,16 +134,12 @@ function AdminDashboard() {
                             <TableCell>${order.totalPrice}</TableCell>
                             <TableCell>
                               {order.isPaid
-                                ? `paid at ${new Date(
-                                    order.paidAt
-                                  ).toDateString()}`
+                                ? `paid at ${order.paidAt}`
                                 : 'not paid'}
                             </TableCell>
                             <TableCell>
                               {order.isDelivered
-                                ? `delivered at ${new Date(
-                                    order.deliveredAt
-                                  ).toDateString()}`
+                                ? `delivered at ${order.deliveredAt}`
                                 : 'not delivered'}
                             </TableCell>
                             <TableCell>
@@ -170,4 +162,4 @@ function AdminDashboard() {
   );
 }
 
-export default dynamic(() => Promise.resolve(AdminDashboard), { ssr: false });
+export default dynamic(() => Promise.resolve(AdminOrders), { ssr: false });

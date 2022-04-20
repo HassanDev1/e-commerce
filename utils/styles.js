@@ -56,6 +56,19 @@ const useStyles = makeStyles((theme) => ({
       display: 'flex',
     },
   },
+  discountCodeForm: {
+    backgroundColor: 'white',
+    borderRadius: 5,
+    align: 'center',
+  },
+  codeInput: {
+    textAlign: 'center',
+    color: '#000000',
+    '& ::placeholder': {
+      color: '#606060',
+    },
+  },
+
   searchForm: {
     backgroundColor: 'white',
     borderRadius: 5,

@@ -19,6 +19,7 @@ import {
   Card,
   List,
   ListItem,
+  InputBase,
 } from '@material-ui/core';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -43,7 +44,8 @@ function PlaceOrder() {
   //If item price is more than $200, shipping is free. Otherwise, it's $15
   const shippingPrice = itemsPrice > 200 ? 0 : 15;
   const taxPrice = round2(itemsPrice * 0.0825); //8.25% tax
-  const totalPrice = round2(itemsPrice + shippingPrice + taxPrice);
+  const startPrice = round2(itemsPrice + shippingPrice + taxPrice);
+  const [totalPrice, setTotalPrice] = useState(startPrice);
 
   useEffect(() => {
     if (!paymentMethod) {
@@ -54,10 +56,34 @@ function PlaceOrder() {
     }
   }, []);
 
+  const [code, setCode] = useState('');
+  const [discounted, setDiscounted] = useState(false);
+  const [discount, setDiscount] = useState(null);
+  //const [discountedTotal, setDiscountedTotal] = useState(null);
   const { closeSnackbar, enqueueSnackbar } = useSnackbar();
+
+  const discountHandler = async () => {
+    const { data } = await axios.get(`/api/admin/verifyDiscount/${code}`, {
+      headers: { authorization: `Bearer ${userInfo.token}` },
+    });
+    if (data) {
+      setDiscounted(true);
+      setDiscount(data.amount);
+      setTotalPrice(round2(startPrice - data.amount * startPrice));
+      enqueueSnackbar('Discount Applied!', { variant: 'success' });
+    } else {
+      enqueueSnackbar('Code not valid', { variant: 'error' });
+    }
+  };
+
+  const codeChangeHandler = (e) => {
+    setCode(e.target.value);
+  };
+
   const [loading, setLoading] = useState(false);
   const placeOrderHandler = async () => {
     closeSnackbar();
+
     try {
       setLoading(true);
       const { data } = await axios.post(
@@ -211,20 +237,50 @@ function PlaceOrder() {
                   </Grid>
                 </Grid>
               </ListItem>
-              <ListItem>
-                <Grid container>
-                  <Grid item xs={6}>
-                    <Typography>
-                      <strong>Total:</strong>
-                    </Typography>
+              {discounted && (
+                <ListItem>
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <Typography>Discount:</Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography align="right">-{discount * 100}%</Typography>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={6}>
-                    <Typography align="right">
-                      <strong>${totalPrice}</strong>
-                    </Typography>
+                </ListItem>
+              )}
+              {discounted ? (
+                <ListItem>
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <Typography>
+                        <strong>Discounted Total:</strong>
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography align="right">
+                        <strong>${totalPrice}</strong>
+                      </Typography>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </ListItem>
+                </ListItem>
+              ) : (
+                <ListItem>
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <Typography>
+                        <strong>Total:</strong>
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography align="right">
+                        <strong>${totalPrice}</strong>
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </ListItem>
+              )}
+
               <ListItem>
                 <Button
                   onClick={placeOrderHandler}
@@ -234,6 +290,29 @@ function PlaceOrder() {
                 >
                   Place Order
                 </Button>
+              </ListItem>
+              <ListItem>
+                <List>
+                  <ListItem>
+                    <form className={classes.discountCodeForm}>
+                      <InputBase
+                        name="discountCode"
+                        className={classes.codeInput}
+                        placeholder="Enter Discount Code"
+                        onChange={codeChangeHandler}
+                      />
+                    </form>
+                  </ListItem>
+                  <ListItem>
+                    <Button
+                      onClick={discountHandler}
+                      variant="outlined"
+                      color="primary"
+                    >
+                      Add Coupon
+                    </Button>
+                  </ListItem>
+                </List>
               </ListItem>
               {loading && (
                 <ListItem>
