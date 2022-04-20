@@ -1,12 +1,13 @@
 import nc from 'next-connect';
-import { isAdmin, isAuth } from '../../../../utils/auth';
+import { isAuth } from '../../../../utils/auth';
 import { connectToDatabase } from '../../../../utils/db';
 
 const handler = nc();
-handler.use(isAuth, isAdmin);
+handler.use(isAuth);
 
 handler.get(async (req, res) => {
   const { db } = await connectToDatabase();
+  //console.log(req);
   const code = await db
     .collection('discountCodes')
     .findOne({ name: req.query.name });
