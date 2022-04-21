@@ -30,7 +30,7 @@ function reducer(state, action) {
     case 'FETCH_REQUEST':
       return { ...state, loading: true, error: '' };
     case 'FETCH_SUCCESS':
-      return { ...state, loading: false, products: action.payload, error: '' };
+      return { ...state, loading: false, codes: action.payload, error: '' };
     case 'FETCH_FAIL':
       return { ...state, loading: false, error: action.payload };
     case 'CREATE_REQUEST':
@@ -59,11 +59,11 @@ function AdminDashboard() {
   const { userInfo } = state;
 
   const [
-    { loading, error, products, loadingCreate, successDelete, loadingDelete },
+    { loading, error, codes, loadingCreate, successDelete, loadingDelete },
     dispatch,
   ] = useReducer(reducer, {
     loading: true,
-    products: [],
+    codes: [],
     error: '',
   });
 
@@ -74,9 +74,10 @@ function AdminDashboard() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`/api/admin/products`, {
+        const { data } = await axios.get(`/api/admin/discountCodes`, {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
+
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
@@ -97,38 +98,38 @@ function AdminDashboard() {
     try {
       dispatch({ type: 'CREATE_REQUEST' });
       const { data } = await axios.post(
-        `/api/admin/products`,
+        `/api/admin/discountCodes`,
         {},
         {
           headers: { authorization: `Bearer ${userInfo.token}` },
         }
       );
       dispatch({ type: 'CREATE_SUCCESS' });
-      enqueueSnackbar('Product created successfully', { variant: 'success' });
-      router.push(`/admin/product/${data.product._id}`);
+      enqueueSnackbar('Code created successfully', { variant: 'success' });
+      router.push(`/admin/discountCodes/${data.code._id}`);
     } catch (err) {
       dispatch({ type: 'CREATE_FAIL' });
       enqueueSnackbar(getError(err), { variant: 'error' });
     }
   };
-  const deleteHandler = async (productId) => {
+  const deleteHandler = async (codeId) => {
     if (!window.confirm('Are you sure?')) {
       return;
     }
     try {
       dispatch({ type: 'DELETE_REQUEST' });
-      await axios.delete(`/api/admin/products/${productId}`, {
+      await axios.delete(`/api/admin/discountCodes/${codeId}`, {
         headers: { authorization: `Bearer ${userInfo.token}` },
       });
       dispatch({ type: 'DELETE_SUCCESS' });
-      enqueueSnackbar('Product deleted successfully', { variant: 'success' });
+      enqueueSnackbar('Code deleted successfully', { variant: 'success' });
     } catch (err) {
       dispatch({ type: 'DELETE_FAIL' });
       enqueueSnackbar(getError(err), { variant: 'error' });
     }
   };
   return (
-    <Layout title="Products">
+    <Layout title="Discount Codes">
       <Grid container spacing={1}>
         <Grid item md={3} xs={12}>
           <Card className={classes.section}>
@@ -144,7 +145,7 @@ function AdminDashboard() {
                 </ListItem>
               </NextLink>
               <NextLink href="/admin/products" passHref>
-                <ListItem selected button component="a">
+                <ListItem button component="a">
                   <ListItemText primary="Products"></ListItemText>
                 </ListItem>
               </NextLink>
@@ -153,8 +154,8 @@ function AdminDashboard() {
                   <ListItemText primary="Users"></ListItemText>
                 </ListItem>
               </NextLink>
-              <NextLink href="/admin/discounts" passHref>
-                <ListItem button component="a">
+              <NextLink href="/admin/discountCodes" passHref>
+                <ListItem selected button component="a">
                   <ListItemText primary="Discount Codes"></ListItemText>
                 </ListItem>
               </NextLink>
@@ -168,7 +169,7 @@ function AdminDashboard() {
                 <Grid container alignItems="center">
                   <Grid item xs={6}>
                     <Typography component="h2" variant="h2">
-                      Products
+                      Discount Codes
                     </Typography>
                     {loadingDelete && <CircularProgress />}
                   </Grid>
@@ -197,27 +198,19 @@ function AdminDashboard() {
                         <TableRow>
                           <TableCell>ID</TableCell>
                           <TableCell>NAME</TableCell>
-                          <TableCell>PRICE</TableCell>
-                          <TableCell>CATEGORY</TableCell>
-                          <TableCell>COUNT</TableCell>
-                          <TableCell>RATING</TableCell>
+                          <TableCell>AMOUNT</TableCell>
                           <TableCell>ACTIONS</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {products.map((product) => (
-                          <TableRow key={product._id}>
-                            <TableCell>
-                              {product._id.substring(20, 24)}
-                            </TableCell>
-                            <TableCell>{product.name}</TableCell>
-                            <TableCell>${product.price}</TableCell>
-                            <TableCell>{product.category}</TableCell>
-                            <TableCell>{product.countInStock}</TableCell>
-                            <TableCell>{product.rating}</TableCell>
+                        {codes.map((code) => (
+                          <TableRow key={code._id}>
+                            <TableCell>{code._id.substring(20, 24)}</TableCell>
+                            <TableCell>{code.name}</TableCell>
+                            <TableCell>{code.amount * 100}%</TableCell>
                             <TableCell>
                               <NextLink
-                                href={`/admin/product/${product._id}`}
+                                href={`/admin/discountCodes/${code._id}`}
                                 passHref
                               >
                                 <Button size="small" variant="contained">
@@ -225,7 +218,7 @@ function AdminDashboard() {
                                 </Button>
                               </NextLink>{' '}
                               <Button
-                                onClick={() => deleteHandler(product._id)}
+                                onClick={() => deleteHandler(code._id)}
                                 size="small"
                                 variant="contained"
                               >

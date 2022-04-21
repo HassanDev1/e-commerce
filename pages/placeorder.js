@@ -19,6 +19,7 @@ import {
   Card,
   List,
   ListItem,
+  TextField,
 } from '@material-ui/core';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -27,6 +28,7 @@ import CheckoutWizard from '../components/CheckoutWizard';
 import { useSnackbar } from 'notistack';
 import { getError } from '../utils/error';
 import Cookies from 'js-cookie';
+import { Controller, useForm } from 'react-hook-form';
 
 function PlaceOrder() {
   const classes = useStyles();
@@ -36,6 +38,11 @@ function PlaceOrder() {
     userInfo,
     cart: { cartItems, shippingAddress, paymentMethod },
   } = state;
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm();
   const round2 = (num) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.456 => 123.46
   const itemsPrice = round2(
     cartItems.reduce((a, c) => a + c.price * c.quantity, 0)
@@ -43,7 +50,8 @@ function PlaceOrder() {
   //If item price is more than $200, shipping is free. Otherwise, it's $15
   const shippingPrice = itemsPrice > 200 ? 0 : 15;
   const taxPrice = round2(itemsPrice * 0.0825); //8.25% tax
-  const totalPrice = round2(itemsPrice + shippingPrice + taxPrice);
+  const startPrice = round2(itemsPrice + shippingPrice + taxPrice);
+  const [totalPrice, setTotalPrice] = useState(startPrice);
 
   useEffect(() => {
     if (!paymentMethod) {
@@ -54,10 +62,32 @@ function PlaceOrder() {
     }
   }, []);
 
+  const [discounted, setDiscounted] = useState(false);
+  const [discount, setDiscount] = useState(null);
+
   const { closeSnackbar, enqueueSnackbar } = useSnackbar();
+
+  const discountHandler = async ({ code }) => {
+    const { data } = await axios.get(`/api/admin/verifyDiscount/${code}`, {
+      headers: { authorization: `Bearer ${userInfo.token}` },
+    });
+    if (data) {
+      setDiscounted(true);
+      setDiscount(data.amount);
+      setTotalPrice(round2(startPrice - data.amount * startPrice));
+      enqueueSnackbar('Discount Applied!', { variant: 'success' });
+    } else {
+      setDiscounted(false);
+      setDiscount(null);
+      setTotalPrice(startPrice);
+      enqueueSnackbar('Code not valid', { variant: 'error' });
+    }
+  };
+
   const [loading, setLoading] = useState(false);
   const placeOrderHandler = async () => {
     closeSnackbar();
+
     try {
       setLoading(true);
       const { data } = await axios.post(
@@ -211,20 +241,50 @@ function PlaceOrder() {
                   </Grid>
                 </Grid>
               </ListItem>
-              <ListItem>
-                <Grid container>
-                  <Grid item xs={6}>
-                    <Typography>
-                      <strong>Total:</strong>
-                    </Typography>
+              {discounted && (
+                <ListItem>
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <Typography>Discount:</Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography align="right">-{discount * 100}%</Typography>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={6}>
-                    <Typography align="right">
-                      <strong>${totalPrice}</strong>
-                    </Typography>
+                </ListItem>
+              )}
+              {discounted ? (
+                <ListItem>
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <Typography>
+                        <strong>Discounted Total:</strong>
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography align="right">
+                        <strong>${totalPrice}</strong>
+                      </Typography>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </ListItem>
+                </ListItem>
+              ) : (
+                <ListItem>
+                  <Grid container>
+                    <Grid item xs={6}>
+                      <Typography>
+                        <strong>Total:</strong>
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography align="right">
+                        <strong>${totalPrice}</strong>
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </ListItem>
+              )}
+
               <ListItem>
                 <Button
                   onClick={placeOrderHandler}
@@ -234,6 +294,46 @@ function PlaceOrder() {
                 >
                   Place Order
                 </Button>
+              </ListItem>
+              <ListItem>
+                <form
+                  onSubmit={handleSubmit(discountHandler)}
+                  className={classes.discountCodeForm}
+                >
+                  <List>
+                    <ListItem>
+                      <Controller
+                        name="code"
+                        control={control}
+                        defaultValue=""
+                        rules={{
+                          required: true,
+                        }}
+                        render={({ field }) => (
+                          <TextField
+                            variant="outlined"
+                            fullWidth
+                            id="code"
+                            label="Discount Code"
+                            error={Boolean(errors.name)}
+                            helperText={errors.name ? 'Code is required' : ''}
+                            {...field}
+                          ></TextField>
+                        )}
+                      ></Controller>
+                    </ListItem>
+                    <ListItem>
+                      <Button
+                        variant="contained"
+                        type="submit"
+                        fullWidth
+                        color="primary"
+                      >
+                        Add Coupon
+                      </Button>
+                    </ListItem>
+                  </List>
+                </form>
               </ListItem>
               {loading && (
                 <ListItem>

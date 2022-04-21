@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useReducer } from "react";
-import dynamic from "next/dynamic";
-import Layout from "../../components/Layout";
-import { Store } from "../../utils/Store";
-import NextLink from "next/link";
-import Image from "next/image";
+import React, { useContext, useEffect, useReducer } from 'react';
+import dynamic from 'next/dynamic';
+import Layout from '../../components/Layout';
+import { Store } from '../../utils/Store';
+import NextLink from 'next/link';
+import Image from 'next/image';
 import {
   Grid,
   TableContainer,
@@ -19,42 +19,42 @@ import {
   List,
   ListItem,
   Button,
-} from "@material-ui/core";
-import axios from "axios";
-import { useRouter } from "next/router";
-import useStyles from "../../utils/styles";
-import { useSnackbar } from "notistack";
-import { getError } from "../../utils/error";
-import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+} from '@material-ui/core';
+import axios from 'axios';
+import { useRouter } from 'next/router';
+import useStyles from '../../utils/styles';
+import { useSnackbar } from 'notistack';
+import { getError } from '../../utils/error';
+import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 
 function reducer(state, action) {
   switch (action.type) {
-    case "FETCH_REQUEST":
-      return { ...state, loading: true, error: "" };
-    case "FETCH_SUCCESS":
-      return { ...state, loading: false, order: action.payload, error: "" };
-    case "FETCH_FAIL":
+    case 'FETCH_REQUEST':
+      return { ...state, loading: true, error: '' };
+    case 'FETCH_SUCCESS':
+      return { ...state, loading: false, order: action.payload, error: '' };
+    case 'FETCH_FAIL':
       return { ...state, loading: false, error: action.payload };
-    case "PAY_REQUEST":
+    case 'PAY_REQUEST':
       return { ...state, loadingPay: true };
-    case "PAY_SUCCESS":
+    case 'PAY_SUCCESS':
       return { ...state, loadingPay: false, successPay: true };
-    case "PAY_FAIL":
+    case 'PAY_FAIL':
       return { ...state, loadingPay: false, errorPay: action.payload };
-    case "PAY_RESET":
-      return { ...state, loadingPay: false, successPay: false, errorPay: "" };
-    case "DELIVER_REQUEST":
+    case 'PAY_RESET':
+      return { ...state, loadingPay: false, successPay: false, errorPay: '' };
+    case 'DELIVER_REQUEST':
       return { ...state, loadingDeliver: true };
-    case "DELIVER_SUCCESS":
+    case 'DELIVER_SUCCESS':
       return { ...state, loadingDeliver: false, successDeliver: true };
-    case "DELIVER_FAIL":
+    case 'DELIVER_FAIL':
       return { ...state, loadingDeliver: false, errorDeliver: action.payload };
-    case "DELIVER_RESET":
+    case 'DELIVER_RESET':
       return {
         ...state,
         loadingDeliver: false,
         successDeliver: false,
-        errorDeliver: "",
+        errorDeliver: '',
       };
     default:
       state;
@@ -75,7 +75,7 @@ function Order({ params }) {
   ] = useReducer(reducer, {
     loading: true,
     order: {},
-    error: "",
+    error: '',
   });
   const {
     shippingAddress,
@@ -93,18 +93,18 @@ function Order({ params }) {
 
   useEffect(() => {
     if (!userInfo) {
-      return router.push("/login");
+      return router.push('/login');
     }
 
     const fetchOrder = async () => {
       try {
-        dispatch({ type: "FETCH_REQUEST" });
+        dispatch({ type: 'FETCH_REQUEST' });
         const { data } = await axios.get(`/api/orders/${orderId}`, {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
-        dispatch({ type: "FETCH_SUCCESS", payload: data });
+        dispatch({ type: 'FETCH_SUCCESS', payload: data });
       } catch (err) {
-        dispatch({ type: "FETCH_FAIL", payload: getError(err) });
+        dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
       }
     };
     if (
@@ -115,24 +115,24 @@ function Order({ params }) {
     ) {
       fetchOrder();
       if (successPay) {
-        dispatch({ type: "PAY_RESET" });
+        dispatch({ type: 'PAY_RESET' });
       }
       if (successDeliver) {
-        dispatch({ type: "DELIVER_RESET" });
+        dispatch({ type: 'DELIVER_RESET' });
       }
     } else {
       const loadPaypalScript = async () => {
-        const { data: clientId } = await axios.get("/api/keys/paypal", {
+        const { data: clientId } = await axios.get('/api/keys/paypal', {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
         paypalDispatch({
-          type: "resetOptions",
+          type: 'resetOptions',
           value: {
-            "client-id": clientId,
-            currency: "USD",
+            'client-id': clientId,
+            currency: 'USD',
           },
         });
-        paypalDispatch({ type: "setLoadingStatus", value: "pending" });
+        paypalDispatch({ type: 'setLoadingStatus', value: 'pending' });
       };
       loadPaypalScript();
     }
@@ -154,7 +154,7 @@ function Order({ params }) {
   function onApprove(data, actions) {
     return actions.order.capture().then(async function (details) {
       try {
-        dispatch({ type: "PAY_REQUEST" });
+        dispatch({ type: 'PAY_REQUEST' });
         const { data } = await axios.put(
           `/api/orders/${order._id}/pay`,
           details,
@@ -162,22 +162,22 @@ function Order({ params }) {
             headers: { authorization: `Bearer ${userInfo.token}` },
           }
         );
-        dispatch({ type: "PAY_SUCCESS", payload: data });
-        enqueueSnackbar("Order is paid", { variant: "success" });
+        dispatch({ type: 'PAY_SUCCESS', payload: data });
+        enqueueSnackbar('Order is paid', { variant: 'success' });
       } catch (err) {
-        dispatch({ type: "PAY_FAIL", payload: getError(err) });
-        enqueueSnackbar(getError(err), { variant: "error" });
+        dispatch({ type: 'PAY_FAIL', payload: getError(err) });
+        enqueueSnackbar(getError(err), { variant: 'error' });
       }
     });
   }
 
   function onError(err) {
-    enqueueSnackbar(getError(err), { variant: "error" });
+    enqueueSnackbar(getError(err), { variant: 'error' });
   }
 
   async function deliverOrderHandler() {
     try {
-      dispatch({ type: "DELIVER_REQUEST" });
+      dispatch({ type: 'DELIVER_REQUEST' });
       const { data } = await axios.put(
         `/api/orders/${order._id}/deliver`,
         {},
@@ -185,17 +185,17 @@ function Order({ params }) {
           headers: { authorization: `Bearer ${userInfo.token}` },
         }
       );
-      dispatch({ type: "DELIVER_SUCCESS", payload: data });
-      enqueueSnackbar("Order is delivered", { variant: "success" });
+      dispatch({ type: 'DELIVER_SUCCESS', payload: data });
+      enqueueSnackbar('Order is delivered', { variant: 'success' });
     } catch (err) {
-      dispatch({ type: "DELIVER_FAIL", payload: getError(err) });
-      enqueueSnackbar(getError(err), { variant: "error" });
+      dispatch({ type: 'DELIVER_FAIL', payload: getError(err) });
+      enqueueSnackbar(getError(err), { variant: 'error' });
     }
   }
 
   return (
     <Layout title={`Order ${orderId}`}>
-      <Typography component='h1' variant='h1'>
+      <Typography component="h2" variant="h2">
         Order {orderId}
       </Typography>
       {loading ? (
@@ -208,43 +208,43 @@ function Order({ params }) {
             <Card className={classes.section}>
               <List>
                 <ListItem>
-                  <Typography component='h2' variant='h2'>
+                  <Typography component="h3" variant="h3">
                     Shipping Address
                   </Typography>
                 </ListItem>
                 <ListItem>
-                  {shippingAddress.fullName}, {shippingAddress.address},{" "}
-                  {shippingAddress.city}, {shippingAddress.postalCode},{" "}
+                  {shippingAddress.fullName}, {shippingAddress.address},{' '}
+                  {shippingAddress.city}, {shippingAddress.postalCode},{' '}
                   {shippingAddress.country}
                 </ListItem>
                 <ListItem>
-                  Status:{" "}
+                  Status:{' '}
                   {isDelivered
                     ? `delivered at ${deliveredAt}`
-                    : "not delivered"}
+                    : 'not delivered'}
                 </ListItem>
               </List>
             </Card>
             <Card className={classes.section}>
               <List>
                 <ListItem>
-                  <Typography component='h2' variant='h2'>
+                  <Typography component="h3" variant="h3">
                     Payment Method
                   </Typography>
                 </ListItem>
                 <ListItem>{paymentMethod}</ListItem>
                 <ListItem>
-                  Status:{" "}
+                  Status:{' '}
                   {isPaid
                     ? `paid on ${new Date(paidAt).toDateString()}`
-                    : "not paid"}
+                    : 'not paid'}
                 </ListItem>
               </List>
             </Card>
             <Card className={classes.section}>
               <List>
                 <ListItem>
-                  <Typography component='h2' variant='h2'>
+                  <Typography component="h3" variant="h3">
                     Order Items
                   </Typography>
                 </ListItem>
@@ -255,8 +255,8 @@ function Order({ params }) {
                         <TableRow>
                           <TableCell>Image</TableCell>
                           <TableCell>Name</TableCell>
-                          <TableCell align='right'>Quantity</TableCell>
-                          <TableCell align='right'>Price</TableCell>
+                          <TableCell align="right">Quantity</TableCell>
+                          <TableCell align="right">Price</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -282,10 +282,10 @@ function Order({ params }) {
                                 </Link>
                               </NextLink>
                             </TableCell>
-                            <TableCell align='right'>
+                            <TableCell align="right">
                               <Typography>{item.quantity}</Typography>
                             </TableCell>
-                            <TableCell align='right'>
+                            <TableCell align="right">
                               <Typography>${item.price}</Typography>
                             </TableCell>
                           </TableRow>
@@ -301,7 +301,7 @@ function Order({ params }) {
             <Card className={classes.section}>
               <List>
                 <ListItem>
-                  <Typography variant='h2'>Order Summary</Typography>
+                  <Typography variant="h3">Order Summary</Typography>
                 </ListItem>
                 <ListItem>
                   <Grid container>
@@ -309,7 +309,7 @@ function Order({ params }) {
                       <Typography>Items:</Typography>
                     </Grid>
                     <Grid item xs={6}>
-                      <Typography align='right'>${itemsPrice}</Typography>
+                      <Typography align="right">${itemsPrice}</Typography>
                     </Grid>
                   </Grid>
                 </ListItem>
@@ -319,7 +319,7 @@ function Order({ params }) {
                       <Typography>Tax:</Typography>
                     </Grid>
                     <Grid item xs={6}>
-                      <Typography align='right'>${taxPrice}</Typography>
+                      <Typography align="right">${taxPrice}</Typography>
                     </Grid>
                   </Grid>
                 </ListItem>
@@ -329,7 +329,7 @@ function Order({ params }) {
                       <Typography>Shipping:</Typography>
                     </Grid>
                     <Grid item xs={6}>
-                      <Typography align='right'>${shippingPrice}</Typography>
+                      <Typography align="right">${shippingPrice}</Typography>
                     </Grid>
                   </Grid>
                 </ListItem>
@@ -341,7 +341,7 @@ function Order({ params }) {
                       </Typography>
                     </Grid>
                     <Grid item xs={6}>
-                      <Typography align='right'>
+                      <Typography align="right">
                         <strong>${totalPrice}</strong>
                       </Typography>
                     </Grid>
@@ -367,8 +367,8 @@ function Order({ params }) {
                     {loadingDeliver && <CircularProgress />}
                     <Button
                       fullWidth
-                      variant='contained'
-                      color='primary'
+                      variant="contained"
+                      color="primary"
                       onClick={deliverOrderHandler}
                     >
                       Deliver Order
