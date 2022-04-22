@@ -84,6 +84,13 @@ function PlaceOrder() {
     }
   };
 
+  const createdAt = new Date().toLocaleDateString('en-us', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+
   const [loading, setLoading] = useState(false);
   const placeOrderHandler = async () => {
     closeSnackbar();
@@ -94,12 +101,14 @@ function PlaceOrder() {
         '/api/orders',
         {
           orderItems: cartItems,
+          name: userInfo.name,
           shippingAddress,
           paymentMethod,
           itemsPrice,
           shippingPrice,
           taxPrice,
           totalPrice,
+          createdAt,
         },
         {
           headers: {
@@ -119,7 +128,7 @@ function PlaceOrder() {
   return (
     <Layout title="Shopping Cart">
       <CheckoutWizard activeStep={3}></CheckoutWizard>
-      <Typography component="h1" variant="h1">
+      <Typography component="h2" variant="h2">
         Place Order
       </Typography>
 
@@ -128,7 +137,7 @@ function PlaceOrder() {
           <Card className={classes.section}>
             <List>
               <ListItem>
-                <Typography component="h2" variant="h2">
+                <Typography component="h3" variant="h3">
                   Shipping Address
                 </Typography>
               </ListItem>
@@ -142,7 +151,7 @@ function PlaceOrder() {
           <Card className={classes.section}>
             <List>
               <ListItem>
-                <Typography component="h2" variant="h2">
+                <Typography component="h3" variant="h3">
                   Payment Method
                 </Typography>
               </ListItem>
@@ -152,7 +161,7 @@ function PlaceOrder() {
           <Card className={classes.section}>
             <List>
               <ListItem>
-                <Typography component="h2" variant="h2">
+                <Typography component="h3" variant="h3">
                   Order Items
                 </Typography>
               </ListItem>
@@ -263,7 +272,7 @@ function PlaceOrder() {
                     </Grid>
                     <Grid item xs={6}>
                       <Typography align="right">
-                        <strong>${totalPrice}</strong>
+                        <strong>${totalPrice.toFixed(2)}</strong>
                       </Typography>
                     </Grid>
                   </Grid>
@@ -278,7 +287,7 @@ function PlaceOrder() {
                     </Grid>
                     <Grid item xs={6}>
                       <Typography align="right">
-                        <strong>${totalPrice}</strong>
+                        <strong>${totalPrice.toFixed(2)}</strong>
                       </Typography>
                     </Grid>
                   </Grid>
@@ -292,7 +301,7 @@ function PlaceOrder() {
                   color="primary"
                   fullWidth
                 >
-                  Place Order
+                  Continue to Payment
                 </Button>
               </ListItem>
               <ListItem>
@@ -315,8 +324,8 @@ function PlaceOrder() {
                             fullWidth
                             id="code"
                             label="Discount Code"
-                            error={Boolean(errors.name)}
-                            helperText={errors.name ? 'Code is required' : ''}
+                            error={Boolean(errors.code)}
+                            helperText={errors.code ? 'Code is required' : ''}
                             {...field}
                           ></TextField>
                         )}
