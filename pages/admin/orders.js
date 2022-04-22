@@ -128,7 +128,7 @@ function AdminOrders() {
                           <TableRow key={order._id}>
                             <TableCell>{order._id.substring(20, 24)}</TableCell>
                             <TableCell>
-                              {order.user ? order.user.name : 'DELETED USER'}
+                              {order.name ? order.name : 'DELETED USER'}
                             </TableCell>
                             <TableCell>{order.createdAt}</TableCell>
                             <TableCell>${order.totalPrice}</TableCell>

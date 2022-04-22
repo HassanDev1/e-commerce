@@ -48,7 +48,7 @@ export default function Payment() {
     <Layout title="Payment Methods">
       <CheckoutWizard activeStep={2}></CheckoutWizard>
       <form className={classes.form} onSubmit={submitHandler}>
-        <Typography component="h1" variant="h1">
+        <Typography component="h2" variant="h2">
           Payment Method
         </Typography>
         <List>
