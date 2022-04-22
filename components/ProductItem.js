@@ -5,20 +5,24 @@ import {
   CardActions,
   CardContent,
   CardMedia,
+  IconButton,
   Typography,
-} from '@material-ui/core';
-import React from 'react';
-import NextLink from 'next/link';
+} from "@material-ui/core";
+import React from "react";
+import NextLink from "next/link";
+import Carts from "./icons/svg/cart";
+import useStyles from "../utils/styles";
 //import Rating from '@material-ui/lab/Rating';
 
 export default function ProductItem({ product, addToCartHandler }) {
+  const classes = useStyles();
   return (
     <Card>
       <NextLink href={`/product/${product.slug}`} passHref>
         <CardActionArea>
           <CardMedia
             height={340}
-            component="img"
+            component='img'
             image={product.image}
             title={product.image}
           ></CardMedia>
@@ -31,18 +35,18 @@ export default function ProductItem({ product, addToCartHandler }) {
         <Typography>
           ${product.price}
           {product.countInStock > 0 ? (
-            <Button
-              size="small"
-              color="primary"
+            <IconButton
+              size='small'
+              color='primary'
               onClick={() => addToCartHandler(product)}
             >
-              Add to Cart
-            </Button>
+              <Carts width={100} height={60} className={classes.cart} />
+            </IconButton>
           ) : (
             <Button
               disabled={true}
-              size="small"
-              color="primary"
+              size='small'
+              color='primary'
               onClick={() => addToCartHandler(product)}
             >
               Out of stock

@@ -1,92 +1,107 @@
-import { makeStyles } from '@material-ui/core';
+import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   navbar: {
-    backgroundColor: '#203040',
+    backgroundColor: "#203040",
 
-    '& a': {
-      color: '#fffffff',
+    "& a": {
+      color: "#fffffff",
       marginLeft: 10,
     },
   },
   brand: {
-    fontWeight: 'bold',
-    fontSize: '1.5rem',
+    fontWeight: "bold",
+    fontSize: "1.5rem",
   },
   grow: {
     flexGrow: 1,
   },
   main: {
-    minHeight: '80vh',
+    minHeight: "80vh",
   },
   footer: {
     marginTop: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
   section: {
     marginTop: 10,
     marginBottom: 10,
   },
   form: {
-    width: '100%',
+    width: "100%",
     maxWidth: 800,
-    margin: '0 auto',
+    margin: "0 auto",
   },
   navbarButton: {
-    color: '#f0c000',
-    textTransform: 'initial',
+    color: "#f0c000",
+    textTransform: "initial",
   },
   transparentBackground: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
   error: {
-    color: '#f04040',
+    color: "#f04040",
   },
   fullWidth: {
-    width: '100%',
+    width: "100%",
   },
   toolbar: {
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
-  mt1: { marginTop: '1rem' },
+  mt1: { marginTop: "1rem" },
   menuButton: { padding: 0 },
   searchSection: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
+    display: "none",
+    [theme.breakpoints.up("md")]: {
+      display: "flex",
     },
   },
   discountCodeForm: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 5,
-    align: 'center',
+    align: "center",
   },
   codeInput: {
-    textAlign: 'center',
-    color: '#000000',
-    '& ::placeholder': {
-      color: '#606060',
+    textAlign: "center",
+    color: "#000000",
+    "& ::placeholder": {
+      color: "#606060",
+    },
+  },
+  logo: {
+    top: "50%",
+    left: "50%",
+    transform: { translateX: "-50%", translateY: "-50%" },
+  },
+  logo: {
+    "&:hover": {
+      width: "100%",
+      transition: { width: ".3s" },
     },
   },
 
   searchForm: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 5,
   },
   searchInput: {
     paddingLeft: 20,
-    color: '#000000',
-    '& ::placeholder': {
-      color: '#606060',
+    color: "#000000",
+    "& ::placeholder": {
+      color: "#606060",
     },
   },
   iconButton: {
     padding: 5,
-    borderRadius: '0 5px 5px 0',
-    '& span': {
-      color: '#000000',
+    borderRadius: "0 5px 5px 0",
+    "& span": {
+      color: "#000000",
     },
   },
+  cart: {
+    paddingTop: 5,
+  },
+
   sort: {
     marginRight: 5,
   },
