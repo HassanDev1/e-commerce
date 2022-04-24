@@ -72,7 +72,6 @@ handler.post(async (req, res) => {
 
       return res.send({ message: "Review updated" });
     } else {
-      //THIS WORKS SOMEHOW
       const review = {
         user: ObjectId(req.user._id),
         name: req.user.name,
