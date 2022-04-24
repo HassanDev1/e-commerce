@@ -9,7 +9,10 @@ import {
 } from '@material-ui/core';
 import React from 'react';
 import NextLink from 'next/link';
-//import Rating from '@material-ui/lab/Rating';
+import Rating from '@material-ui/lab/Rating';
+
+
+
 
 export default function ProductItem({ product, addToCartHandler }) {
   return (
@@ -25,6 +28,7 @@ export default function ProductItem({ product, addToCartHandler }) {
           <CardContent>
             <Typography>{product.name}</Typography>
           </CardContent>
+          <Rating value={product.rating} readOnly></Rating>
         </CardActionArea>
       </NextLink>
       <CardActions>

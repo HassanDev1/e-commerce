@@ -31,12 +31,13 @@ export default function Home(props) {
           {products.map((product) => (
             <Grid item md={4} key={product.name}> 
               
+              
               <ProductItem
                 product={product}
                 addToCartHandler={addToCartHandler}
+                
               />
-             
-              <Rating value={product.rating} readOnly></Rating>
+            
               
             </Grid>
 
