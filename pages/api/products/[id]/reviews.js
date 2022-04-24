@@ -37,11 +37,9 @@ handler.post(async (req, res) => {
   if (product) {
     //checks if current user has already reviewed this product
     const existReview = product.reviews.find((x) => x.user == req.user._id);
-    console.log("exists", existReview);
+
     if (existReview) {
-      //This function I suspect is the one that isnt working
-      console.log(req.user._id);
-      const newProduct = await db.collection("Products").updateOne(
+      await db.collection("Products").updateOne(
         {
           _id: ObjectId(req.query.id),
           "reviews.user": existReview.user,
@@ -53,7 +51,6 @@ handler.post(async (req, res) => {
           },
         }
       );
-      console.log(newProduct);
 
       //Pulling the updated product from the db
       const uProduct = await db
