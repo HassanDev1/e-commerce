@@ -1,6 +1,6 @@
 //import { ObjectId } from 'mongodb';
 import nc from 'next-connect';
-import { connectToDatabase } from '../../../utils/db';
+import { connectToDatabase } from '../../../../utils/db';
 
 const handler = nc();
 

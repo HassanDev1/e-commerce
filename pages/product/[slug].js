@@ -1,5 +1,8 @@
 import NextLink from 'next/link';
 import Image from 'next/image';
+/******* */
+import React, { useContext, useEffect, useState } from 'react';
+/******** */
 import {
   Grid,
   Link,
@@ -9,10 +12,15 @@ import {
   Card,
   Button,
 } from '@material-ui/core';
+/********************* */
+import Rating from '@material-ui/lab/Rating';
+import { useSnackbar } from 'notistack';
+import { getError } from '../../utils/error';
+/********************* */
 import Layout from '../../components/Layout';
 import useStyles from '../../utils/styles';
 import { connectToDatabase } from '../../utils/db';
-import { useContext } from 'react';
+//import { useContext } from 'react';
 import { Store } from '../../utils/Store';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -22,6 +30,26 @@ export default function ProductScreen(props) {
   const { state, dispatch } = useContext(Store);
   const { product } = props;
   const classes = useStyles();
+/************ */
+const { enqueueSnackbar } = useSnackbar();
+  const [reviews, setReviews] = useState([]);
+
+
+
+
+  const fetchReviews = async () => {
+    try {
+      const { data } = await axios.get(`/api/products/${product._id}/reviews`);
+      setReviews(data);
+    } catch (err) {
+      enqueueSnackbar(getError(err), { variant: 'error' });
+    }
+  };
+  useEffect(() => {
+    fetchReviews();
+  }, []);
+
+/************ */
   if (!product) {
     return <div>Product Not Found</div>;
   }
@@ -70,11 +98,26 @@ export default function ProductScreen(props) {
             <ListItem>
               <Typography>Brand: {product.brand}</Typography>
             </ListItem>
+
+
+
+
+
             <ListItem>
-              <Typography>
-                Rating: {product.rating} stars ({product.numReviews} reviews)
-              </Typography>
+              <Rating value={product.rating} readOnly></Rating>
+              <Link href="#reviews">
+                <Typography>
+                  ({product.numReviews} reviews)
+                </Typography>
+              </Link>
             </ListItem>
+
+
+
+
+
+
+
             <ListItem>
               <Typography> Description: {product.description}</Typography>
             </ListItem>
@@ -131,6 +174,36 @@ export default function ProductScreen(props) {
           </Card>
         </Grid>
       </Grid>
+      
+
+
+     
+        <ListItem>
+          <Typography name="reviews" id="reviews" variant="h2">
+            Customer Reviews
+          </Typography>
+        </ListItem>
+        {reviews.length === 0 && <ListItem>No review</ListItem>}         
+        {reviews.map((review) => (
+          <ListItem key={review._id}>
+            <Grid container>
+              <Grid item className={classes.reviewItem}>
+                <strong>{review.name}</strong>
+                <p>{review.createdAt.substring(0,10)}</p>
+              </Grid>
+              <Grid item>
+                <Rating value={review.rating} readOnly></Rating>
+                <Typography>{review.comment}</Typography>
+              </Grid>
+            </Grid>
+          </ListItem>
+        ))}            
+
+
+
+
+
+
     </Layout>
   );
 }
