@@ -119,6 +119,14 @@ function PlaceOrder() {
   return (
     <Layout title="Shopping Cart">
       <CheckoutWizard activeStep={3}></CheckoutWizard>
+      <Button
+        type="button"
+        variant="contained"
+        onClick={() => router.push('/payment')}
+      >
+        Back TO PAYMENT
+      </Button>
+
       <Typography component="h1" variant="h1">
         Place Order
       </Typography>
