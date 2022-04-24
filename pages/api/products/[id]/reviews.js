@@ -1,18 +1,8 @@
 // /api/products/:id/reviews
-import mongoose from 'mongoose';
-import nextConnect from 'next-connect';
-import { onError } from '../../../../utils/error';
-//import db from '../../../../utils/db';
-//import Product from '../../../../models/Product';
-import { isAuth } from '../../../../utils/auth';
+import { onError } from "../../../../utils/error";
 
-
-
-//import nc from "next-connect";
-import { connectToDatabase } from "../../../utils/db";
-
-
-
+import { connectToDatabase } from "../../../../utils/db";
+import { isAuth } from "../../../../utils/auth";
 
 const handler = nextConnect({
   onError,
@@ -28,7 +18,7 @@ handler.get(async (req, res) => {
   if (product) {
     res.send(product.reviews);
   } else {
-    res.status(404).send({ message: 'Product not found' });
+    res.status(404).send({ message: "Product not found" });
   }
 });
 
@@ -39,11 +29,11 @@ handler.use(isAuth).post(async (req, res) => {
     const existReview = product.reviews.find((x) => x.user == req.user._id);
     if (existReview) {
       await Product.updateOne(
-        { _id: req.query.id, 'reviews._id': existReview._id },
+        { _id: req.query.id, "reviews._id": existReview._id },
         {
           $set: {
-            'reviews.$.comment': req.body.comment,
-            'reviews.$.rating': Number(req.body.rating),
+            "reviews.$.comment": req.body.comment,
+            "reviews.$.rating": Number(req.body.rating),
           },
         }
       );
@@ -56,7 +46,7 @@ handler.use(isAuth).post(async (req, res) => {
       await updatedProduct.save();
 
       await db.disconnect();
-      return res.send({ message: 'Review updated' });
+      return res.send({ message: "Review updated" });
     } else {
       const review = {
         user: mongoose.Types.ObjectId(req.user._id),
@@ -72,12 +62,12 @@ handler.use(isAuth).post(async (req, res) => {
       await product.save();
       await db.disconnect();
       res.status(201).send({
-        message: 'Review submitted',
+        message: "Review submitted",
       });
     }
   } else {
     await db.disconnect();
-    res.status(404).send({ message: 'Product Not Found' });
+    res.status(404).send({ message: "Product Not Found" });
   }
 });
 

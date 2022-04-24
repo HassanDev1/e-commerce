@@ -1,6 +1,6 @@
 //import { ObjectId } from 'mongodb';
-import nc from 'next-connect';
-import { connectToDatabase } from '../../../../utils/db';
+import nc from "next-connect";
+import { connectToDatabase } from "../../../../utils/db";
 
 const handler = nc();
 
@@ -15,7 +15,7 @@ handler.get(async (req, res) => {
 
   // res.send({ message: "seeded sucessfully" });
 
-  const product = await db.collection('Products').find({});
+  const product = await db.collection("Products").find({});
   res.json(product);
 
   return product;
