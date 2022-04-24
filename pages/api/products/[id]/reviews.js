@@ -1,9 +1,9 @@
 // /api/products/:id/reviews
-import nextConnect from 'next-connect';
-import { onError } from '../../../../utils/error';
-import { ObjectId } from 'mongodb';
-import { connectToDatabase } from '../../../../utils/db';
-import { isAuth } from '../../../../utils/auth';
+import nextConnect from "next-connect";
+import { onError } from "../../../../utils/error";
+import { ObjectId } from "mongodb";
+import { connectToDatabase } from "../../../../utils/db";
+import { isAuth } from "../../../../utils/auth";
 //import axios from 'axios';
 
 const handler = nextConnect({
@@ -16,12 +16,12 @@ handler.use(isAuth);
 handler.get(async (req, res) => {
   const { db } = await connectToDatabase();
   const product = await db
-    .collection('Products')
+    .collection("Products")
     .findOne({ _id: ObjectId(req.query.id) });
   if (product) {
     res.send(product.reviews);
   } else {
-    res.status(404).send({ message: 'Product not found' });
+    res.status(404).send({ message: "Product not found" });
   }
 });
 
@@ -31,22 +31,25 @@ handler.post(async (req, res) => {
 
   //checks if item exists
   const product = await db
-    .collection('Products')
+    .collection("Products")
     .findOne({ _id: ObjectId(req.query.id) });
 
   if (product) {
     //checks if current user has already reviewed this product
     const existReview = product.reviews.find((x) => x.user == req.user._id);
-
+    console.log("exists", existReview);
     if (existReview) {
       //This function I suspect is the one that isnt working
       console.log(req.user._id);
-      const newProduct = await db.collection('Products').insertOne(
-        { _id: req.query.id, 'reviews.user': req.user._id },
+      const newProduct = await db.collection("Products").updateOne(
+        {
+          _id: ObjectId(req.query.id),
+          "reviews.user": existReview.user,
+        },
         {
           $set: {
-            'reviews.$.comment': req.body.comment,
-            'reviews.$.rating': Number(req.body.rating),
+            "reviews.$.comment": req.body.comment,
+            "reviews.$.rating": Number(req.body.rating),
           },
         }
       );
@@ -54,11 +57,11 @@ handler.post(async (req, res) => {
 
       //Pulling the updated product from the db
       const uProduct = await db
-        .collection('Products')
+        .collection("Products")
         .findOne({ _id: ObjectId(req.query.id) });
 
       //Setting the new numReview and rating after the updated rating. This is working
-      await db.collection('Products').updateOne(
+      await db.collection("Products").updateOne(
         { _id: product._id },
         {
           $set: {
@@ -70,7 +73,7 @@ handler.post(async (req, res) => {
         }
       );
 
-      return res.send({ message: 'Review updated' });
+      return res.send({ message: "Review updated" });
     } else {
       //THIS WORKS SOMEHOW
       const review = {
@@ -80,7 +83,7 @@ handler.post(async (req, res) => {
         comment: req.body.comment,
       };
 
-      await db.collection('Products').updateOne(
+      await db.collection("Products").updateOne(
         { _id: product._id },
         {
           $push: {
@@ -90,10 +93,10 @@ handler.post(async (req, res) => {
       );
 
       const uProduct = await db
-        .collection('Products')
+        .collection("Products")
         .findOne({ _id: ObjectId(req.query.id) });
 
-      await db.collection('Products').updateOne(
+      await db.collection("Products").updateOne(
         { _id: uProduct._id },
         {
           $set: {
@@ -106,11 +109,11 @@ handler.post(async (req, res) => {
       );
 
       res.status(201).send({
-        message: 'Review submitted',
+        message: "Review submitted",
       });
     }
   } else {
-    res.status(404).send({ message: 'Product Not Found' });
+    res.status(404).send({ message: "Product Not Found" });
   }
 });
 
