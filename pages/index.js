@@ -6,7 +6,6 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import ProductItem from '../components/ProductItem';
-import { Rating } from '@material-ui/lab';
 
 export default function Home(props) {
   const router = useRouter();
@@ -29,18 +28,12 @@ export default function Home(props) {
         <h1>Products</h1>
         <Grid container spacing={3}>
           {products.map((product) => (
-            <Grid item md={4} key={product.name}> 
-              
-              
+            <Grid item md={4} key={product.name}>
               <ProductItem
                 product={product}
                 addToCartHandler={addToCartHandler}
-                
               />
-            
-              
             </Grid>
-
           ))}
         </Grid>
       </div>

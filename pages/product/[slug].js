@@ -11,6 +11,9 @@ import {
   Typography,
   Card,
   Button,
+  CircularProgress,
+  TextField,
+  Divider,
 } from '@material-ui/core';
 /********************* */
 import Rating from '@material-ui/lab/Rating';
@@ -30,16 +33,43 @@ export default function ProductScreen(props) {
   const { state, dispatch } = useContext(Store);
   const { product } = props;
   const classes = useStyles();
-/************ */
-const { enqueueSnackbar } = useSnackbar();
+  const { userInfo } = state;
+  /************ */
+  const { enqueueSnackbar } = useSnackbar();
+
   const [reviews, setReviews] = useState([]);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState('');
+  const [loading, setLoading] = useState(false);
 
-
-
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await axios.post(
+        `/api/products/${product._id}/reviews`,
+        {
+          rating,
+          comment,
+        },
+        {
+          headers: { authorization: `Bearer ${userInfo.token}` },
+        }
+      );
+      setLoading(false);
+      enqueueSnackbar('Review submitted successfully', { variant: 'success' });
+      fetchReviews();
+    } catch (err) {
+      setLoading(false);
+      enqueueSnackbar(getError(err), { variant: 'error' });
+    }
+  };
 
   const fetchReviews = async () => {
     try {
-      const { data } = await axios.get(`/api/products/${product._id}/reviews`);
+      const { data } = await axios.get(`/api/products/${product._id}/reviews`, {
+        headers: { authorization: `Bearer ${userInfo.token}` },
+      });
       setReviews(data);
     } catch (err) {
       enqueueSnackbar(getError(err), { variant: 'error' });
@@ -49,14 +79,16 @@ const { enqueueSnackbar } = useSnackbar();
     fetchReviews();
   }, []);
 
-/************ */
+  /************ */
   if (!product) {
     return <div>Product Not Found</div>;
   }
   const addToCartHandler = async () => {
     const existItem = state.cart.cartItems.find((x) => x._id === product._id);
     const quantity = existItem ? existItem.quantity + 1 : 1;
-    const { data } = await axios.get(`/api/products/${product.id}`);
+    const { data } = await axios.get(`/api/products/${product.id}`, {
+      headers: { authorization: `Bearer ${userInfo.token}` },
+    });
     if (data.countInStock < quantity) {
       window.alert('Sorry, this product is out of stock at the moment.');
       return;
@@ -99,24 +131,12 @@ const { enqueueSnackbar } = useSnackbar();
               <Typography>Brand: {product.brand}</Typography>
             </ListItem>
 
-
-
-
-
             <ListItem>
               <Rating value={product.rating} readOnly></Rating>
               <Link href="#reviews">
-                <Typography>
-                  ({product.numReviews} reviews)
-                </Typography>
+                <Typography>({product.numReviews} reviews)</Typography>
               </Link>
             </ListItem>
-
-
-
-
-
-
 
             <ListItem>
               <Typography> Description: {product.description}</Typography>
@@ -174,22 +194,25 @@ const { enqueueSnackbar } = useSnackbar();
           </Card>
         </Grid>
       </Grid>
-      
 
-
-     
+      <List>
+        <Divider light />
         <ListItem>
-          <Typography name="reviews" id="reviews" variant="h2">
+          <Typography name="reviews" id="reviews" variant="h3">
             Customer Reviews
           </Typography>
         </ListItem>
-        {reviews.length === 0 && <ListItem>No review</ListItem>}         
+        {reviews.length === 0 && <ListItem>No review</ListItem>}
         {reviews.map((review) => (
           <ListItem key={review._id}>
             <Grid container>
               <Grid item className={classes.reviewItem}>
-                <strong>{review.name}</strong>
-                <p>{review.createdAt.substring(0,10)}</p>
+                <Typography>
+                  <strong>{review.name}</strong>
+                </Typography>
+                {review.createdAt && (
+                  <Typography>{review.createdAt.substring(0, 10)}</Typography>
+                )}
               </Grid>
               <Grid item>
                 <Rating value={review.rating} readOnly></Rating>
@@ -197,13 +220,57 @@ const { enqueueSnackbar } = useSnackbar();
               </Grid>
             </Grid>
           </ListItem>
-        ))}            
+        ))}
+        <ListItem>
+          {userInfo ? (
+            <form onSubmit={submitHandler} className={classes.reviewForm}>
+              <List>
+                <ListItem>
+                  <Typography variant="h4">Leave your review</Typography>
+                </ListItem>
+                <ListItem>
+                  <TextField
+                    multiline
+                    variant="outlined"
+                    fullWidth
+                    name="review"
+                    label="Enter comment"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
+                  />
+                </ListItem>
+                <ListItem>
+                  <Rating
+                    name="simple-controlled"
+                    value={rating}
+                    onChange={(e) => setRating(e.target.value)}
+                  />
+                </ListItem>
+                <ListItem>
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                  >
+                    Submit
+                  </Button>
 
-
-
-
-
-
+                  {loading && <CircularProgress></CircularProgress>}
+                </ListItem>
+              </List>
+            </form>
+          ) : (
+            <Typography variant="h3">
+              Please{' '}
+              <Link href={`/login?redirect=/product/${product.slug}`}>
+                login
+              </Link>{' '}
+              to write a review
+            </Typography>
+          )}
+        </ListItem>
+      </List>
     </Layout>
   );
 }

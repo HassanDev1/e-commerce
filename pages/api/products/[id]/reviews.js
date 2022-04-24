@@ -1,74 +1,116 @@
 // /api/products/:id/reviews
-import nextConnect from "next-connect";
-import { onError } from "../../../../utils/error";
-
-import { connectToDatabase } from "../../../../utils/db";
-import { isAuth } from "../../../../utils/auth";
+import nextConnect from 'next-connect';
+import { onError } from '../../../../utils/error';
+import { ObjectId } from 'mongodb';
+import { connectToDatabase } from '../../../../utils/db';
+import { isAuth } from '../../../../utils/auth';
+//import axios from 'axios';
 
 const handler = nextConnect({
   onError,
 });
 
+handler.use(isAuth);
+
+//works
 handler.get(async (req, res) => {
-  //db.connect();
-  //************* */
   const { db } = await connectToDatabase();
-  //**************** */
-  const product = await Product.findById(req.query.id);
-  db.disconnect();
+  const product = await db
+    .collection('Products')
+    .findOne({ _id: ObjectId(req.query.id) });
   if (product) {
     res.send(product.reviews);
   } else {
-    res.status(404).send({ message: "Product not found" });
+    res.status(404).send({ message: 'Product not found' });
   }
 });
 
-handler.use(isAuth).post(async (req, res) => {
-  await db.connect();
-  const product = await Product.findById(req.query.id);
+//Only works if its a new review, cant get it to update
+handler.post(async (req, res) => {
+  const { db } = await connectToDatabase();
+
+  //checks if item exists
+  const product = await db
+    .collection('Products')
+    .findOne({ _id: ObjectId(req.query.id) });
+
   if (product) {
+    //checks if current user has already reviewed this product
     const existReview = product.reviews.find((x) => x.user == req.user._id);
+
     if (existReview) {
-      await Product.updateOne(
-        { _id: req.query.id, "reviews._id": existReview._id },
+      //This function I suspect is the one that isnt working
+      console.log(req.user._id);
+      const newProduct = await db.collection('Products').insertOne(
+        { _id: req.query.id, 'reviews.user': req.user._id },
         {
           $set: {
-            "reviews.$.comment": req.body.comment,
-            "reviews.$.rating": Number(req.body.rating),
+            'reviews.$.comment': req.body.comment,
+            'reviews.$.rating': Number(req.body.rating),
+          },
+        }
+      );
+      console.log(newProduct);
+
+      //Pulling the updated product from the db
+      const uProduct = await db
+        .collection('Products')
+        .findOne({ _id: ObjectId(req.query.id) });
+
+      //Setting the new numReview and rating after the updated rating. This is working
+      await db.collection('Products').updateOne(
+        { _id: product._id },
+        {
+          $set: {
+            numReview: uProduct.reviews.length,
+            rating:
+              uProduct.reviews.reduce((a, c) => c.rating + a, 0) /
+              uProduct.reviews.length,
           },
         }
       );
 
-      const updatedProduct = await Product.findById(req.query.id);
-      updatedProduct.numReviews = updatedProduct.reviews.length;
-      updatedProduct.rating =
-        updatedProduct.reviews.reduce((a, c) => c.rating + a, 0) /
-        updatedProduct.reviews.length;
-      await updatedProduct.save();
-
-      await db.disconnect();
-      return res.send({ message: "Review updated" });
+      return res.send({ message: 'Review updated' });
     } else {
+      //THIS WORKS SOMEHOW
       const review = {
-        user: mongoose.Types.ObjectId(req.user._id),
+        user: ObjectId(req.user._id),
         name: req.user.name,
         rating: Number(req.body.rating),
         comment: req.body.comment,
       };
-      product.reviews.push(review);
-      product.numReviews = product.reviews.length;
-      product.rating =
-        product.reviews.reduce((a, c) => c.rating + a, 0) /
-        product.reviews.length;
-      await product.save();
-      await db.disconnect();
+
+      await db.collection('Products').updateOne(
+        { _id: product._id },
+        {
+          $push: {
+            reviews: review,
+          },
+        }
+      );
+
+      const uProduct = await db
+        .collection('Products')
+        .findOne({ _id: ObjectId(req.query.id) });
+
+      await db.collection('Products').updateOne(
+        { _id: uProduct._id },
+        {
+          $set: {
+            numReview: uProduct.reviews.length,
+            rating:
+              uProduct.reviews.reduce((a, c) => c.rating + a, 0) /
+              uProduct.reviews.length,
+          },
+        }
+      );
+
       res.status(201).send({
-        message: "Review submitted",
+        message: 'Review submitted',
       });
     }
   } else {
-    await db.disconnect();
-    res.status(404).send({ message: "Product Not Found" });
+    res.status(404).send({ message: 'Product Not Found' });
   }
 });
 
