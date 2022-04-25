@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import NexLink from "next/link";
 import React, { useEffect, useContext, useReducer } from "react";
+import moment from "moment";
 import {
   CircularProgress,
   Grid,
@@ -119,16 +120,16 @@ function OrderHistory() {
                             <TableCell>${order.totalPrice}</TableCell>
                             <TableCell>
                               {order.isPaid
-                                ? `paid on ${new Date(
-                                    order.paidAt
-                                  ).toDateString()}`
+                                ? `paid on ${moment().format(
+                                    "MMMM Do YYYY, h:mm:ss a"
+                                  )}`
                                 : "not paid"}
                             </TableCell>
                             <TableCell>
                               {order.isDelivered
-                                ? `delivered on ${new Date(
-                                    order.deliveredAt
-                                  ).toDateString()}`
+                                ? `delivered on ${moment().format(
+                                    "MMMM Do YYYY, h:mm:ss a"
+                                  )}`
                                 : "not delivered"}
                             </TableCell>
                             <TableCell>

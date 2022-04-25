@@ -24,7 +24,7 @@ handler.post(async (req, res) => {
     description: "sample description",
     rating: 0,
     numReview: 0,
-    reviews: [{}],
+    reviews: [],
   };
   await db.collection("Products").insertOne(product);
 

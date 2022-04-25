@@ -4,6 +4,8 @@ import { onError } from "../../../../utils/error";
 import { ObjectId } from "mongodb";
 import { connectToDatabase } from "../../../../utils/db";
 import { isAuth } from "../../../../utils/auth";
+import moment from "moment";
+
 //import axios from 'axios';
 
 const handler = nextConnect({
@@ -58,14 +60,22 @@ handler.post(async (req, res) => {
         .findOne({ _id: ObjectId(req.query.id) });
 
       //Setting the new numReview and rating after the updated rating. This is working
+      let rateCount = 0;
+      let totalRate = 0;
+      for (let i = 0; i < uProduct.reviews.length; i++) {
+        if (uProduct.reviews[i].rating > 0) {
+          totalRate += uProduct.reviews[i].rating;
+          rateCount++;
+        }
+      }
+      let avgRate = totalRate / rateCount;
+
       await db.collection("Products").updateOne(
         { _id: product._id },
         {
           $set: {
             numReview: uProduct.reviews.length,
-            rating:
-              uProduct.reviews.reduce((a, c) => c.rating + a, 0) /
-              uProduct.reviews.length,
+            rating: avgRate,
           },
         }
       );
@@ -77,6 +87,7 @@ handler.post(async (req, res) => {
         name: req.user.name,
         rating: Number(req.body.rating),
         comment: req.body.comment,
+        createdAt: moment().format("MMM Do YYYY"),
       };
 
       await db.collection("Products").updateOne(
