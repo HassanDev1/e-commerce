@@ -1,18 +1,12 @@
 // /api/products/:id/reviews
-import nextConnect from "next-connect";
+import nc from "next-connect";
 import { onError } from "../../../../utils/error";
 import { ObjectId } from "mongodb";
 import { connectToDatabase } from "../../../../utils/db";
 import { isAuth } from "../../../../utils/auth";
 import moment from "moment";
 
-//import axios from 'axios';
-
-const handler = nextConnect({
-  onError,
-});
-
-handler.use(isAuth);
+const handler = nc({ onError });
 
 //works
 handler.get(async (req, res) => {
@@ -28,7 +22,7 @@ handler.get(async (req, res) => {
 });
 
 //Only works if its a new review, cant get it to update
-handler.post(async (req, res) => {
+handler.use(isAuth).post(async (req, res) => {
   const { db } = await connectToDatabase();
 
   //checks if item exists

@@ -67,9 +67,7 @@ export default function ProductScreen(props) {
 
   const fetchReviews = async () => {
     try {
-      const { data } = await axios.get(`/api/products/${product._id}/reviews`, {
-        headers: { authorization: `Bearer ${userInfo.token}` },
-      });
+      const { data } = await axios.get(`/api/products/${product._id}/reviews`);
       setReviews(data);
     } catch (err) {
       enqueueSnackbar(getError(err), { variant: "error" });
@@ -86,9 +84,7 @@ export default function ProductScreen(props) {
   const addToCartHandler = async () => {
     const existItem = state.cart.cartItems.find((x) => x._id === product._id);
     const quantity = existItem ? existItem.quantity + 1 : 1;
-    const { data } = await axios.get(`/api/products/${product.id}`, {
-      headers: { authorization: `Bearer ${userInfo.token}` },
-    });
+    const { data } = await axios.get(`/api/products/${product.id}`);
     if (data.countInStock < quantity) {
       window.alert("Sorry, this product is out of stock at the moment.");
       return;
