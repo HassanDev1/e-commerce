@@ -109,7 +109,12 @@ function CartScreen() {
                           ))}
                         </Select>
                       </TableCell>
-                      <TableCell align="right">${item.price}</TableCell>
+                      {item.onSale ? (
+                        <TableCell align="right">${item.salePrice}</TableCell>
+                      ) : (
+                        <TableCell align="right">${item.price}</TableCell>
+                      )}
+
                       <TableCell align="right">
                         <Button
                           variant="contained"

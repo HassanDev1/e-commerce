@@ -71,6 +71,8 @@ function ProductEdit({ params }) {
   const router = useRouter();
   const classes = useStyles();
   const { userInfo } = state;
+  const [checked, setChecked] = useState(false);
+  const [onSale, setOnSale] = useState(false);
 
   useEffect(() => {
     if (!userInfo) {
@@ -91,6 +93,9 @@ function ProductEdit({ params }) {
           setValue('brand', data.brand);
           setValue('countInStock', data.countInStock);
           setValue('description', data.description);
+          if (data.onSale) {
+            setValue('salePrice', data.salePrice);
+          }
         } catch (err) {
           dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
         }
@@ -98,6 +103,12 @@ function ProductEdit({ params }) {
       fetchData();
     }
   }, []);
+
+  const handleCheckbox = () => {
+    setChecked(!checked);
+    setOnSale(!onSale);
+  };
+
   const uploadHandler = async (e) => {
     const file = e.target.files[0];
     const bodyFormData = new FormData();
@@ -123,7 +134,6 @@ function ProductEdit({ params }) {
     name,
     slug,
     price,
-    onSale,
     salePrice,
     category,
     image,
@@ -157,14 +167,6 @@ function ProductEdit({ params }) {
       dispatch({ type: 'UPDATE_FAIL', payload: getError(err) });
       enqueueSnackbar(getError(err), { variant: 'error' });
     }
-  };
-
-  const [onSale, setOnSale] = useState(false);
-  const [checked, setChecked] = useState(false);
-  const [salePrice] = useState(null);
-  const handleChecked = () => {
-    setChecked(!checked);
-    setOnSale(!onSale);
   };
 
   return (
@@ -284,20 +286,22 @@ function ProductEdit({ params }) {
                         control={
                           <Checkbox
                             checked={checked}
-                            onChange={handleChecked}
+                            onChange={handleCheckbox}
+                            name="name"
+                            lab
                           />
                         }
-                        label="Add Sale Pricing"
+                        label="Add Sale Pricing?"
                       />
                     </ListItem>
                     {onSale && (
                       <ListItem>
                         <Controller
-                          name="sale price"
+                          name="salePrice"
                           control={control}
-                          defaultValue={salePrice}
+                          defaultValue=""
                           rules={{
-                            required: true,
+                            required: false,
                           }}
                           render={({ field }) => (
                             <TextField
@@ -307,7 +311,7 @@ function ProductEdit({ params }) {
                               label="Sale Price"
                               error={Boolean(errors.salePrice)}
                               helperText={
-                                errors.salePrice ? 'Sale price is required' : ''
+                                errors.salePrice ? 'Sale price is optional' : ''
                               }
                               {...field}
                             ></TextField>
@@ -315,6 +319,7 @@ function ProductEdit({ params }) {
                         ></Controller>
                       </ListItem>
                     )}
+
                     <ListItem>
                       <Controller
                         name="image"
@@ -438,7 +443,6 @@ function ProductEdit({ params }) {
                         )}
                       ></Controller>
                     </ListItem>
-
                     <ListItem>
                       <Button
                         variant="contained"

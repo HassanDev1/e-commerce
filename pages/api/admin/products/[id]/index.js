@@ -19,7 +19,6 @@ handler.put(async (req, res) => {
   const product = await db
     .collection('Products')
     .findOne({ _id: ObjectId(req.query.id) });
-
   if (product) {
     await db.collection('Products').updateOne(
       { _id: ObjectId(req.query.id) },
