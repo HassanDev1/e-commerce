@@ -165,7 +165,7 @@ export default function Search(props) {
               <Select value={sort} onChange={sortHandler}>
                 <MenuItem value="lowest">Price: Low to High</MenuItem>
                 <MenuItem value="highest">Price: High to Low</MenuItem>
-                <MenuItem value="available">In Stock</MenuItem>
+                <MenuItem value="available">Stock Availability</MenuItem>
               </Select>
             </Grid>
           </Grid>
