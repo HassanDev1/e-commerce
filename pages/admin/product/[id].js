@@ -2,7 +2,7 @@ import axios from 'axios';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import React, { useEffect, useContext, useReducer } from 'react';
+import React, { useEffect, useContext, useReducer, useState } from 'react';
 import {
   Grid,
   List,
@@ -13,6 +13,8 @@ import {
   ListItemText,
   TextField,
   CircularProgress,
+  Checkbox,
+  FormControlLabel,
 } from '@material-ui/core';
 import { getError } from '../../../utils/error';
 import { Store } from '../../../utils/Store';
@@ -121,6 +123,8 @@ function ProductEdit({ params }) {
     name,
     slug,
     price,
+    onSale,
+    salePrice,
     category,
     image,
     brand,
@@ -136,6 +140,8 @@ function ProductEdit({ params }) {
           name,
           slug,
           price,
+          onSale,
+          salePrice,
           category,
           image,
           brand,
@@ -152,6 +158,15 @@ function ProductEdit({ params }) {
       enqueueSnackbar(getError(err), { variant: 'error' });
     }
   };
+
+  const [onSale, setOnSale] = useState(false);
+  const [checked, setChecked] = useState(false);
+  const [salePrice] = useState(null);
+  const handleChecked = () => {
+    setChecked(!checked);
+    setOnSale(!onSale);
+  };
+
   return (
     <Layout title={`Edit Product ${productId}`}>
       <Grid container spacing={1}>
@@ -264,6 +279,42 @@ function ProductEdit({ params }) {
                         )}
                       ></Controller>
                     </ListItem>
+                    <ListItem>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={checked}
+                            onChange={handleChecked}
+                          />
+                        }
+                        label="Add Sale Pricing"
+                      />
+                    </ListItem>
+                    {onSale && (
+                      <ListItem>
+                        <Controller
+                          name="sale price"
+                          control={control}
+                          defaultValue={salePrice}
+                          rules={{
+                            required: true,
+                          }}
+                          render={({ field }) => (
+                            <TextField
+                              variant="outlined"
+                              fullWidth
+                              id="salePrice"
+                              label="Sale Price"
+                              error={Boolean(errors.salePrice)}
+                              helperText={
+                                errors.salePrice ? 'Sale price is required' : ''
+                              }
+                              {...field}
+                            ></TextField>
+                          )}
+                        ></Controller>
+                      </ListItem>
+                    )}
                     <ListItem>
                       <Controller
                         name="image"
