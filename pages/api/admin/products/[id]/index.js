@@ -28,7 +28,7 @@ handler.put(async (req, res) => {
           slug: req.body.slug,
           price: req.body.price,
           onSale: req.body.onSale,
-          salePrice: req.body.salePrice,
+
           category: req.body.category,
           image: req.body.image,
           brand: req.body.brand,

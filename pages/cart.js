@@ -109,11 +109,8 @@ function CartScreen() {
                           ))}
                         </Select>
                       </TableCell>
-                      {item.onSale ? (
-                        <TableCell align="right">${item.salePrice}</TableCell>
-                      ) : (
-                        <TableCell align="right">${item.price}</TableCell>
-                      )}
+
+                      <TableCell align="right">${item.price}</TableCell>
 
                       <TableCell align="right">
                         <Button

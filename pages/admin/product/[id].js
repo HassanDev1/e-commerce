@@ -71,8 +71,6 @@ function ProductEdit({ params }) {
   const router = useRouter();
   const classes = useStyles();
   const { userInfo } = state;
-  const [checked, setChecked] = useState(false);
-  const [onSale, setOnSale] = useState(false);
 
   useEffect(() => {
     if (!userInfo) {
@@ -93,9 +91,7 @@ function ProductEdit({ params }) {
           setValue('brand', data.brand);
           setValue('countInStock', data.countInStock);
           setValue('description', data.description);
-          if (data.onSale) {
-            setValue('salePrice', data.salePrice);
-          }
+          setValue('checkbox', data.onSale);
         } catch (err) {
           dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
         }
@@ -103,6 +99,9 @@ function ProductEdit({ params }) {
       fetchData();
     }
   }, []);
+
+  const [checked, setChecked] = useState(false);
+  const [onSale, setOnSale] = useState(false);
 
   const handleCheckbox = () => {
     setChecked(!checked);
@@ -134,7 +133,6 @@ function ProductEdit({ params }) {
     name,
     slug,
     price,
-    salePrice,
     category,
     image,
     brand,
@@ -151,7 +149,6 @@ function ProductEdit({ params }) {
           slug,
           price,
           onSale,
-          salePrice,
           category,
           image,
           brand,
@@ -287,38 +284,12 @@ function ProductEdit({ params }) {
                           <Checkbox
                             checked={checked}
                             onChange={handleCheckbox}
-                            name="name"
-                            lab
+                            name="checkbox"
                           />
                         }
-                        label="Add Sale Pricing?"
+                        label="Add On Sale Banner?"
                       />
                     </ListItem>
-                    {onSale && (
-                      <ListItem>
-                        <Controller
-                          name="salePrice"
-                          control={control}
-                          defaultValue=""
-                          rules={{
-                            required: false,
-                          }}
-                          render={({ field }) => (
-                            <TextField
-                              variant="outlined"
-                              fullWidth
-                              id="salePrice"
-                              label="Sale Price"
-                              error={Boolean(errors.salePrice)}
-                              helperText={
-                                errors.salePrice ? 'Sale price is optional' : ''
-                              }
-                              {...field}
-                            ></TextField>
-                          )}
-                        ></Controller>
-                      </ListItem>
-                    )}
 
                     <ListItem>
                       <Controller
