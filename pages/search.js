@@ -230,9 +230,6 @@ export async function getServerSideProps({ query }) {
       : sort === 'available'
       ? { countInStock: -1 }
       : { _id: -1 };
-  if (sort === 'available') {
-    console.log('Here');
-  }
 
   const categories = await db.collection('Products').distinct('category');
 
