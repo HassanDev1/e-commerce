@@ -126,7 +126,7 @@ export default function Layout({ title, description, children }) {
     setAnchorEl(null);
     dispatch({ type: "USER_LOGOUT" });
     Cookies.remove("userInfo");
-    Cookies.remove("cartItems");
+
     router.push("/");
   };
   return (
@@ -157,6 +157,7 @@ export default function Layout({ title, description, children }) {
             </Box>
             <Drawer
               anchor='left'
+              width='240'
               open={sidebarVisible}
               onClose={sidebarCloseHandler}
             >

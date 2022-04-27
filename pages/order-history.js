@@ -119,9 +119,7 @@ function OrderHistory() {
                             <TableCell>${order.totalPrice}</TableCell>
                             <TableCell>
                               {order.isPaid
-                                ? `paid on ${new Date(
-                                    order.paidAt
-                                  ).toDateString()}`
+                                ? `paid on ${order.paidAt}`
                                 : "not paid"}
                             </TableCell>
                             <TableCell>

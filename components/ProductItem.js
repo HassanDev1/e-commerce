@@ -17,7 +17,7 @@ import useStyles from "../utils/styles";
 export default function ProductItem({ product, addToCartHandler }) {
   const classes = useStyles();
   return (
-    <Card>
+    <Card style={{ height: "100%" }}>
       <NextLink href={`/product/${product.slug}`} passHref>
         <CardActionArea>
           <CardMedia
