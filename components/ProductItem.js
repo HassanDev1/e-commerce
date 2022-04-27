@@ -34,8 +34,8 @@ export default function ProductItem({ product, addToCartHandler }) {
       <CardActions>
         <Typography>
           {product.onSale ? (
-            <Typography style={{ color: 'red' }}>
-              {' '}
+            <Typography style={{ color: "red" }}>
+              {" "}
               ${product.price} Limited Time Offer!
               <Whatshot />
             </Typography>
