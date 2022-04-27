@@ -18,12 +18,15 @@ handler.post(async (req, res) => {
     slug: 'sample-slug-',
     image: '/public/images/t-shirt1.jpg',
     price: 0,
+    onSale: false,
+    salePrice: 0,
     category: 'sample category',
     brand: 'sample brand',
     countInStock: 0,
     description: 'sample description',
     rating: 0,
     numReview: 0,
+    reviews: [],
   };
   await db.collection('Products').insertOne(product);
 

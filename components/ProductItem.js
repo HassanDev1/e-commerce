@@ -7,11 +7,16 @@ import {
   CardMedia,
   IconButton,
   Typography,
+
 } from "@material-ui/core";
 import React from "react";
 import NextLink from "next/link";
 import Carts from "./icons/svg/cart";
 import useStyles from "../utils/styles";
+
+} from '@material-ui/core';
+import React from 'react';
+import NextLink from 'next/link';
 
 export default function ProductItem({ product, addToCartHandler }) {
   const classes = useStyles();
@@ -28,11 +33,21 @@ export default function ProductItem({ product, addToCartHandler }) {
           <CardContent>
             <Typography>{product.name}</Typography>
           </CardContent>
+          <Rating value={product.rating} readOnly></Rating>
         </CardActionArea>
       </NextLink>
       <CardActions>
         <Typography>
-          ${product.price}
+          {product.onSale ? (
+            <Typography style={{ color: 'red' }}>
+              {' '}
+              ${product.price} Limited Time Offer!
+              <Whatshot />
+            </Typography>
+          ) : (
+            <Typography>${product.price}</Typography>
+          )}
+
           {product.countInStock > 0 ? (
             <IconButton
               size='small'

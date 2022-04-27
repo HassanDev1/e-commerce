@@ -113,6 +113,11 @@ function AdminOrders() {
                   <ListItemText primary='Users'></ListItemText>
                 </ListItem>
               </NextLink>
+              <NextLink href="/admin/discounts" passHref>
+                <ListItem button component="a">
+                  <ListItemText primary="Discount Codes"></ListItemText>
+                </ListItem>
+              </NextLink>
             </List>
           </Card>
         </Grid>

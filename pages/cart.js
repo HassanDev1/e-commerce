@@ -110,8 +110,15 @@ function CartScreen() {
                           ))}
                         </Select>
                       </TableCell>
+
                       <TableCell align='right'>${item.price}</TableCell>
                       <TableCell align='right'>
+
+
+                      <TableCell align="right">${item.price}</TableCell>
+
+                      <TableCell align="right">
+
                         <Button
                           variant='contained'
                           color='secondary'
