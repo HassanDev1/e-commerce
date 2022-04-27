@@ -20,7 +20,6 @@ import {
   Divider,
   ListItemText,
   InputBase,
-  SvgIcon,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -37,7 +36,6 @@ import { useSnackbar } from "notistack";
 import axios from "axios";
 import Logo from "../components/icons/svg/logo";
 import Carts from "./icons/svg/cart";
-import { width } from "@mui/system";
 
 export default function Layout({ title, description, children }) {
   const router = useRouter();
@@ -126,7 +124,7 @@ export default function Layout({ title, description, children }) {
     setAnchorEl(null);
     dispatch({ type: "USER_LOGOUT" });
     Cookies.remove("userInfo");
-    Cookies.remove("cartItems");
+
     router.push("/");
   };
   return (
@@ -157,6 +155,7 @@ export default function Layout({ title, description, children }) {
             </Box>
             <Drawer
               anchor='left'
+              width='240'
               open={sidebarVisible}
               onClose={sidebarCloseHandler}
             >

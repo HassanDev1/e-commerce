@@ -2,7 +2,7 @@ import axios from 'axios';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import React, { useEffect, useContext, useReducer } from 'react';
+import React, { useEffect, useContext, useReducer, useState } from 'react';
 import {
   Grid,
   List,
@@ -13,6 +13,8 @@ import {
   ListItemText,
   TextField,
   CircularProgress,
+  Checkbox,
+  FormControlLabel,
 } from '@material-ui/core';
 import { getError } from '../../../utils/error';
 import { Store } from '../../../utils/Store';
@@ -89,6 +91,7 @@ function ProductEdit({ params }) {
           setValue('brand', data.brand);
           setValue('countInStock', data.countInStock);
           setValue('description', data.description);
+          setValue('checkbox', data.onSale);
         } catch (err) {
           dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
         }
@@ -96,6 +99,15 @@ function ProductEdit({ params }) {
       fetchData();
     }
   }, []);
+
+  const [checked, setChecked] = useState(false);
+  const [onSale, setOnSale] = useState(false);
+
+  const handleCheckbox = () => {
+    setChecked(!checked);
+    setOnSale(!onSale);
+  };
+
   const uploadHandler = async (e) => {
     const file = e.target.files[0];
     const bodyFormData = new FormData();
@@ -136,6 +148,7 @@ function ProductEdit({ params }) {
           name,
           slug,
           price,
+          onSale,
           category,
           image,
           brand,
@@ -152,6 +165,7 @@ function ProductEdit({ params }) {
       enqueueSnackbar(getError(err), { variant: 'error' });
     }
   };
+
   return (
     <Layout title={`Edit Product ${productId}`}>
       <Grid container spacing={1}>
@@ -264,6 +278,19 @@ function ProductEdit({ params }) {
                         )}
                       ></Controller>
                     </ListItem>
+                    <ListItem>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={checked}
+                            onChange={handleCheckbox}
+                            name="checkbox"
+                          />
+                        }
+                        label="Add On Sale Banner?"
+                      />
+                    </ListItem>
+
                     <ListItem>
                       <Controller
                         name="image"
@@ -387,7 +414,6 @@ function ProductEdit({ params }) {
                         )}
                       ></Controller>
                     </ListItem>
-
                     <ListItem>
                       <Button
                         variant="contained"

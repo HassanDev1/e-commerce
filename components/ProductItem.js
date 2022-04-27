@@ -12,12 +12,13 @@ import React from "react";
 import NextLink from "next/link";
 import Carts from "./icons/svg/cart";
 import useStyles from "../utils/styles";
-//import Rating from '@material-ui/lab/Rating';
+import { Rating } from "@mui/material";
+import { Whatshot } from "@material-ui/icons";
 
 export default function ProductItem({ product, addToCartHandler }) {
   const classes = useStyles();
   return (
-    <Card>
+    <Card style={{ height: "100%" }}>
       <NextLink href={`/product/${product.slug}`} passHref>
         <CardActionArea>
           <CardMedia
@@ -29,11 +30,21 @@ export default function ProductItem({ product, addToCartHandler }) {
           <CardContent>
             <Typography>{product.name}</Typography>
           </CardContent>
+          <Rating value={product.rating} readOnly></Rating>
         </CardActionArea>
       </NextLink>
       <CardActions>
         <Typography>
-          ${product.price}
+          {product.onSale ? (
+            <Typography style={{ color: "red" }}>
+              {" "}
+              ${product.price} Limited Time Offer!
+              <Whatshot />
+            </Typography>
+          ) : (
+            <Typography>${product.price}</Typography>
+          )}
+
           {product.countInStock > 0 ? (
             <IconButton
               size='small'

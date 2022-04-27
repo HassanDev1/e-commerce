@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
   navbarButton: {
     color: "#f0c000",
     textTransform: "initial",
+
+    fontWeight: "bold",
+    fontSize: "18px",
   },
   transparentBackground: {
     backgroundColor: "transparent",
@@ -44,6 +47,15 @@ const useStyles = makeStyles((theme) => ({
   },
   fullWidth: {
     width: "100%",
+  },
+  reviewForm: {
+    maxWidth: 800,
+    width: "100%",
+  },
+  reviewItem: {
+    marginRight: "1rem",
+    borderRight: "1px #808080 solid",
+    paddingRight: "1rem",
   },
   toolbar: {
     justifyContent: "space-between",
