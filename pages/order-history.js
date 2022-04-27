@@ -3,7 +3,6 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import NexLink from "next/link";
 import React, { useEffect, useContext, useReducer } from "react";
-import moment from "moment";
 import {
   CircularProgress,
   Grid,

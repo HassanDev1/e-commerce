@@ -29,7 +29,6 @@ import useStyles from "../../utils/styles";
 import Logo from "../../components/icons/svg/logo";
 import { Menu } from "@mui/material";
 import Cookies from "js-cookie";
-import { Bar } from "react-chartjs-2";
 
 function reducer(state, action) {
   switch (action.type) {
