@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
-import dynamic from 'next/dynamic';
-import Layout from '../components/Layout';
-import { Store } from '../utils/Store';
-import NextLink from 'next/link';
-import Image from 'next/image';
+import React, { useContext } from "react";
+import dynamic from "next/dynamic";
+import Layout from "../components/Layout";
+import { Store } from "../utils/Store";
+import NextLink from "next/link";
+import Image from "next/image";
 import {
   Grid,
   TableContainer,
@@ -20,9 +20,9 @@ import {
   Card,
   List,
   ListItem,
-} from '@material-ui/core';
-import { useRouter } from 'next/router';
-import axios from 'axios';
+} from "@material-ui/core";
+import { useRouter } from "next/router";
+import axios from "axios";
 
 function CartScreen() {
   const router = useRouter();
@@ -32,34 +32,35 @@ function CartScreen() {
   } = state;
 
   const updateCartHandler = async (item, quantity) => {
+    console.log("quantity is", quantity);
     const { data } = await axios.get(`/api/products/${item._id}`);
     if (data.countInStock < quantity) {
-      window.alert('Sorry, this product is out of stock at the moment.');
+      window.alert("Sorry, this product is out of stock at the moment.");
       return;
     }
-    dispatch({ type: 'CART_ADD_ITEM', payload: { ...item, quantity } });
+    dispatch({ type: "CART_ADD_ITEM", payload: { ...item, quantity } });
   };
   const removeItemHandler = (item) => {
-    dispatch({ type: 'CART_REMOVE_ITEM', payload: item });
+    dispatch({ type: "CART_REMOVE_ITEM", payload: item });
   };
   const checkoutHandler = () => {
-    router.push('/shipping');
+    router.push("/shipping");
   };
 
   return (
-    <Layout title="Shopping Cart">
-      <Typography component="h2" variant="h2">
+    <Layout title='Shopping Cart'>
+      <Typography component='h2' variant='h2'>
         Your Cart
       </Typography>
       {cartItems.length === 0 ? (
         <div>
-          No items yet.{' '}
-          <NextLink href="/" passHref>
+          No items yet.{" "}
+          <NextLink href='/' passHref>
             <Link>Go shopping!</Link>
           </NextLink>
         </div>
       ) : (
-        <Grid container spacing={1}>
+        <Grid container spacing={4}>
           <Grid item md={9} xs={12}>
             <TableContainer>
               <Table>
@@ -67,9 +68,9 @@ function CartScreen() {
                   <TableRow>
                     <TableCell>Image</TableCell>
                     <TableCell>Name</TableCell>
-                    <TableCell align="right">Quantity</TableCell>
-                    <TableCell align="right">Price</TableCell>
-                    <TableCell align="right">Action</TableCell>
+                    <TableCell align='right'>Quantity</TableCell>
+                    <TableCell align='right'>Price</TableCell>
+                    <TableCell align='right'>Action</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -95,7 +96,7 @@ function CartScreen() {
                           </Link>
                         </NextLink>
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell align='right'>
                         <Select
                           value={item.quantity}
                           onChange={(e) =>
@@ -110,12 +111,17 @@ function CartScreen() {
                         </Select>
                       </TableCell>
 
+                      <TableCell align='right'>${item.price}</TableCell>
+                      <TableCell align='right'>
+
+
                       <TableCell align="right">${item.price}</TableCell>
 
                       <TableCell align="right">
+
                         <Button
-                          variant="contained"
-                          color="secondary"
+                          variant='contained'
+                          color='secondary'
                           onClick={() => removeItemHandler(item)}
                         >
                           x
@@ -131,7 +137,7 @@ function CartScreen() {
             <Card>
               <List>
                 <ListItem>
-                  <Typography variant="h3">
+                  <Typography variant='h3'>
                     Subtotal: $
                     {cartItems
                       .reduce((a, c) => a + c.quantity * c.price, 0)
@@ -141,8 +147,8 @@ function CartScreen() {
                 <ListItem>
                   <Button
                     onClick={checkoutHandler}
-                    variant="contained"
-                    color="primary"
+                    variant='contained'
+                    color='primary'
                     fullWidth
                   >
                     Check Out
