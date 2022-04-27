@@ -25,7 +25,7 @@ handler.get(async (req, res) => {
     ordersPrice += sales[i].totalPrice;
   }
 
-  res.send({ ordersCount, productsCount, usersCount, ordersPrice, salesData });
+  res.send({ ordersCount, productsCount, usersCount, ordersPrice });
 });
 
 export default handler;
