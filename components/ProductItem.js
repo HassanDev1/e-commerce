@@ -12,6 +12,8 @@ import React from "react";
 import NextLink from "next/link";
 import Carts from "./icons/svg/cart";
 import useStyles from "../utils/styles";
+import { Rating } from "@mui/material";
+import { Whatshot } from "@material-ui/icons";
 
 export default function ProductItem({ product, addToCartHandler }) {
   const classes = useStyles();
