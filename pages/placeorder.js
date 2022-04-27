@@ -1,9 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
-import Layout from '../components/Layout';
-import { Store } from '../utils/Store';
-import NextLink from 'next/link';
-import Image from 'next/image';
+import React, { useContext, useEffect, useState } from "react";
+import dynamic from "next/dynamic";
+import Layout from "../components/Layout";
+import { Store } from "../utils/Store";
+import NextLink from "next/link";
+import Image from "next/image";
 import {
   Grid,
   TableContainer,
@@ -20,15 +20,15 @@ import {
   List,
   ListItem,
   TextField,
-} from '@material-ui/core';
-import axios from 'axios';
-import { useRouter } from 'next/router';
-import useStyles from '../utils/styles';
-import CheckoutWizard from '../components/CheckoutWizard';
-import { useSnackbar } from 'notistack';
-import { getError } from '../utils/error';
-import Cookies from 'js-cookie';
-import { Controller, useForm } from 'react-hook-form';
+} from "@material-ui/core";
+import axios from "axios";
+import { useRouter } from "next/router";
+import useStyles from "../utils/styles";
+import CheckoutWizard from "../components/CheckoutWizard";
+import { useSnackbar } from "notistack";
+import { getError } from "../utils/error";
+import Cookies from "js-cookie";
+import { Controller, useForm } from "react-hook-form";
 
 function PlaceOrder() {
   const classes = useStyles();
@@ -55,10 +55,10 @@ function PlaceOrder() {
 
   useEffect(() => {
     if (!paymentMethod) {
-      router.push('/payment');
+      router.push("/payment");
     }
     if (cartItems.length === 0) {
-      router.push('/cart');
+      router.push("/cart");
     }
   }, []);
 
@@ -75,20 +75,20 @@ function PlaceOrder() {
       setDiscounted(true);
       setDiscount(data.amount);
       setTotalPrice(round2(startPrice - data.amount * startPrice));
-      enqueueSnackbar('Discount Applied!', { variant: 'success' });
+      enqueueSnackbar("Discount Applied!", { variant: "success" });
     } else {
       setDiscounted(false);
       setDiscount(null);
       setTotalPrice(startPrice);
-      enqueueSnackbar('Code not valid', { variant: 'error' });
+      enqueueSnackbar("Code not valid", { variant: "error" });
     }
   };
 
-  const createdAt = new Date().toLocaleDateString('en-us', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
+  const createdAt = new Date().toLocaleDateString("en-us", {
+    weekday: "long",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
   });
 
   const [loading, setLoading] = useState(false);
@@ -98,7 +98,7 @@ function PlaceOrder() {
     try {
       setLoading(true);
       const { data } = await axios.post(
-        '/api/orders',
+        "/api/orders",
         {
           orderItems: cartItems,
           name: userInfo.name,
@@ -116,19 +116,27 @@ function PlaceOrder() {
           },
         }
       );
-      dispatch({ type: 'CART_CLEAR' });
-      Cookies.remove('cartItems');
+      dispatch({ type: "CART_CLEAR" });
+      Cookies.remove("cartItems");
       setLoading(false);
       router.push(`/order/${data.insertedIds[0]}`);
     } catch (err) {
       setLoading(false);
-      enqueueSnackbar(getError(err), { variant: 'error' });
+      enqueueSnackbar(getError(err), { variant: "error" });
     }
   };
   return (
-    <Layout title="Shopping Cart">
+    <Layout title='Shopping Cart'>
       <CheckoutWizard activeStep={3}></CheckoutWizard>
-      <Typography component="h2" variant="h2">
+      <Button
+        type='button'
+        variant='contained'
+        onClick={() => router.push("/payment")}
+      >
+        Back TO PAYMENT
+      </Button>
+
+      <Typography component='h1' variant='h1'>
         Place Order
       </Typography>
 
@@ -137,13 +145,13 @@ function PlaceOrder() {
           <Card className={classes.section}>
             <List>
               <ListItem>
-                <Typography component="h3" variant="h3">
+                <Typography component='h3' variant='h3'>
                   Shipping Address
                 </Typography>
               </ListItem>
               <ListItem>
-                {shippingAddress.fullName}, {shippingAddress.address},{' '}
-                {shippingAddress.city}, {shippingAddress.postalCode},{' '}
+                {shippingAddress.fullName}, {shippingAddress.address},{" "}
+                {shippingAddress.city}, {shippingAddress.postalCode},{" "}
                 {shippingAddress.country}
               </ListItem>
             </List>
@@ -151,7 +159,7 @@ function PlaceOrder() {
           <Card className={classes.section}>
             <List>
               <ListItem>
-                <Typography component="h3" variant="h3">
+                <Typography component='h3' variant='h3'>
                   Payment Method
                 </Typography>
               </ListItem>
@@ -161,7 +169,7 @@ function PlaceOrder() {
           <Card className={classes.section}>
             <List>
               <ListItem>
-                <Typography component="h3" variant="h3">
+                <Typography component='h3' variant='h3'>
                   Order Items
                 </Typography>
               </ListItem>
@@ -172,8 +180,8 @@ function PlaceOrder() {
                       <TableRow>
                         <TableCell>Image</TableCell>
                         <TableCell>Name</TableCell>
-                        <TableCell align="right">Quantity</TableCell>
-                        <TableCell align="right">Price</TableCell>
+                        <TableCell align='right'>Quantity</TableCell>
+                        <TableCell align='right'>Price</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -199,10 +207,10 @@ function PlaceOrder() {
                               </Link>
                             </NextLink>
                           </TableCell>
-                          <TableCell align="right">
+                          <TableCell align='right'>
                             <Typography>{item.quantity}</Typography>
                           </TableCell>
-                          <TableCell align="right">
+                          <TableCell align='right'>
                             <Typography>${item.price}</Typography>
                           </TableCell>
                         </TableRow>
@@ -218,7 +226,7 @@ function PlaceOrder() {
           <Card className={classes.section}>
             <List>
               <ListItem>
-                <Typography variant="h3">Order Summary</Typography>
+                <Typography variant='h3'>Order Summary</Typography>
               </ListItem>
               <ListItem>
                 <Grid container>
@@ -226,7 +234,7 @@ function PlaceOrder() {
                     <Typography>Items:</Typography>
                   </Grid>
                   <Grid item xs={6}>
-                    <Typography align="right">${itemsPrice}</Typography>
+                    <Typography align='right'>${itemsPrice}</Typography>
                   </Grid>
                 </Grid>
               </ListItem>
@@ -236,7 +244,7 @@ function PlaceOrder() {
                     <Typography>Tax:</Typography>
                   </Grid>
                   <Grid item xs={6}>
-                    <Typography align="right">${taxPrice}</Typography>
+                    <Typography align='right'>${taxPrice}</Typography>
                   </Grid>
                 </Grid>
               </ListItem>
@@ -246,7 +254,7 @@ function PlaceOrder() {
                     <Typography>Shipping:</Typography>
                   </Grid>
                   <Grid item xs={6}>
-                    <Typography align="right">${shippingPrice}</Typography>
+                    <Typography align='right'>${shippingPrice}</Typography>
                   </Grid>
                 </Grid>
               </ListItem>
@@ -257,7 +265,7 @@ function PlaceOrder() {
                       <Typography>Discount:</Typography>
                     </Grid>
                     <Grid item xs={6}>
-                      <Typography align="right">-{discount * 100}%</Typography>
+                      <Typography align='right'>-{discount * 100}%</Typography>
                     </Grid>
                   </Grid>
                 </ListItem>
@@ -271,7 +279,7 @@ function PlaceOrder() {
                       </Typography>
                     </Grid>
                     <Grid item xs={6}>
-                      <Typography align="right">
+                      <Typography align='right'>
                         <strong>${totalPrice.toFixed(2)}</strong>
                       </Typography>
                     </Grid>
@@ -286,7 +294,7 @@ function PlaceOrder() {
                       </Typography>
                     </Grid>
                     <Grid item xs={6}>
-                      <Typography align="right">
+                      <Typography align='right'>
                         <strong>${totalPrice.toFixed(2)}</strong>
                       </Typography>
                     </Grid>
@@ -297,8 +305,8 @@ function PlaceOrder() {
               <ListItem>
                 <Button
                   onClick={placeOrderHandler}
-                  variant="contained"
-                  color="primary"
+                  variant='contained'
+                  color='primary'
                   fullWidth
                 >
                   Continue to Payment
@@ -312,20 +320,20 @@ function PlaceOrder() {
                   <List>
                     <ListItem>
                       <Controller
-                        name="code"
+                        name='code'
                         control={control}
-                        defaultValue=""
+                        defaultValue=''
                         rules={{
                           required: true,
                         }}
                         render={({ field }) => (
                           <TextField
-                            variant="outlined"
+                            variant='outlined'
                             fullWidth
-                            id="code"
-                            label="Discount Code"
+                            id='code'
+                            label='Discount Code'
                             error={Boolean(errors.code)}
-                            helperText={errors.code ? 'Code is required' : ''}
+                            helperText={errors.code ? "Code is required" : ""}
                             {...field}
                           ></TextField>
                         )}
@@ -333,10 +341,10 @@ function PlaceOrder() {
                     </ListItem>
                     <ListItem>
                       <Button
-                        variant="contained"
-                        type="submit"
+                        variant='contained'
+                        type='submit'
                         fullWidth
-                        color="primary"
+                        color='primary'
                       >
                         Add Coupon
                       </Button>

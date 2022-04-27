@@ -35,6 +35,8 @@ const useStyles = makeStyles((theme) => ({
   navbarButton: {
     color: "#f0c000",
     textTransform: "initial",
+    fontWeight: "bold",
+    fontSize: "18px",
   },
   transparentBackground: {
     backgroundColor: "transparent",
@@ -44,15 +46,6 @@ const useStyles = makeStyles((theme) => ({
   },
   fullWidth: {
     width: "100%",
-  },
-  reviewForm: {
-    maxWidth: 800,
-    width: "100%",
-  },
-  reviewItem: {
-    marginRight: "1rem",
-    borderRight: "1px #808080 solid",
-    paddingRight: "1rem",
   },
   toolbar: {
     justifyContent: "space-between",
@@ -77,6 +70,17 @@ const useStyles = makeStyles((theme) => ({
       color: "#606060",
     },
   },
+  logo: {
+    top: "50%",
+    left: "50%",
+    transform: { translateX: "-50%", translateY: "-50%" },
+  },
+  logo: {
+    "&:hover": {
+      width: "100%",
+      transition: { width: ".3s" },
+    },
+  },
 
   searchForm: {
     backgroundColor: "white",
@@ -96,6 +100,10 @@ const useStyles = makeStyles((theme) => ({
       color: "#000000",
     },
   },
+  cart: {
+    paddingTop: 5,
+  },
+
   sort: {
     marginRight: 5,
   },
