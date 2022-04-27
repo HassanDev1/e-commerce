@@ -19,16 +19,16 @@ handler.get(async (req, res) => {
     .collection("Orders")
     .find({ isPaid: true }, { totalPrice: 1, paidAt: 1 })
     .toArray();
-  console.log(sales.paidAt);
+
   let ordersPrice = 0;
-  let salesData = [0];
+  let salesData = [];
   for (let i = 0; i < sales.length; i++) {
     ordersPrice += sales[i].totalPrice;
-    salesData.push(moment(sales[i].createdAt).format("MMM Do"));
+    salesData.push(sales[i].paidAt);
     salesData.push(ordersPrice);
   }
 
-  for (let i = 0; i < salesData.length; i++) {
+  for (let i = 0; i <= sales.length; i++) {
     console.log(salesData[i]);
   }
   res.send({ ordersCount, productsCount, usersCount, ordersPrice, salesData });

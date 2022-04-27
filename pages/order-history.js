@@ -120,16 +120,12 @@ function OrderHistory() {
                             <TableCell>${order.totalPrice}</TableCell>
                             <TableCell>
                               {order.isPaid
-                                ? `paid on ${moment(order.paidAt).format(
-                                    "MMMM Do YYYY, h:mm:ss a"
-                                  )}`
+                                ? `paid on ${order.paidAt}`
                                 : "not paid"}
                             </TableCell>
                             <TableCell>
                               {order.isDelivered
-                                ? `delivered on ${moment().format(
-                                    "MMMM Do YYYY, h:mm:ss a"
-                                  )}`
+                                ? `delivered on ${order.deliveredAt}`
                                 : "not delivered"}
                             </TableCell>
                             <TableCell>
