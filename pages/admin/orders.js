@@ -52,22 +52,13 @@ function AdminOrders() {
   });
 
   const [sortPrice, setsortPrice] = useState("");
-  const [sortDate, setSorttDate] = useState("");
+
   const handlesSort = (e) => {
     if (e.target.value === "asc") {
       setsortPrice("asc");
     } else {
       setsortPrice("desc");
     }
-
-    // if (e.target.value === "desc" && e.target.name === "Price") {
-    // }
-    // if (e.target.value === "asc" && e.target.name === "Date") {
-    //   setSorttDate("asc");
-    // }
-    // if (e.target.value === "desc" && e.target.name === "Date") {
-    //   setSorttDate("desc");
-    // }
   };
   useEffect(() => {
     if (!userInfo) {

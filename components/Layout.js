@@ -20,7 +20,6 @@ import {
   Divider,
   ListItemText,
   InputBase,
-  SvgIcon,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import CancelIcon from "@material-ui/icons/Cancel";
@@ -37,7 +36,6 @@ import { useSnackbar } from "notistack";
 import axios from "axios";
 import Logo from "../components/icons/svg/logo";
 import Carts from "./icons/svg/cart";
-import { width } from "@mui/system";
 
 export default function Layout({ title, description, children }) {
   const router = useRouter();

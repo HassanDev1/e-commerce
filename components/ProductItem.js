@@ -12,7 +12,6 @@ import React from "react";
 import NextLink from "next/link";
 import Carts from "./icons/svg/cart";
 import useStyles from "../utils/styles";
-//import Rating from '@material-ui/lab/Rating';
 
 export default function ProductItem({ product, addToCartHandler }) {
   const classes = useStyles();
