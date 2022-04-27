@@ -138,7 +138,7 @@ function AdminUsers() {
           <Card className={classes.section}>
             <List>
               <ListItem>
-                <Typography component="h1" variant="h1">
+                <Typography component="h2" variant="h2">
                   Users
                 </Typography>
                 {loadingDelete && <CircularProgress />}
