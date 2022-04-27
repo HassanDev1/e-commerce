@@ -323,29 +323,6 @@ function AdminDashboard() {
                   )}
                 </ListItem>
               </List>
-              <ListItem>
-                <Typography component='h2' variant='h2'>
-                  Sales Chart
-                </Typography>
-              </ListItem>
-              <ListItem>
-                {" "}
-                <Bar
-                  data={{
-                    labels: summary.salesData.map((x) => x._id),
-                    datasets: [
-                      {
-                        label: "Sales",
-                        backgroundColor: "rgba(162, 222, 208, 1)",
-                        data: summary.salesData.map((x) => x.totalSales),
-                      },
-                    ],
-                  }}
-                  options={{
-                    legend: { display: true, position: "right" },
-                  }}
-                ></Bar>
-              </ListItem>
             </Card>
           </Grid>
         </Grid>
