@@ -3,9 +3,8 @@ import { connectToDatabase } from "../../../../utils/db";
 import onError from "../../../../utils/error";
 import { isAuth } from "../../../../utils/auth";
 import { ObjectId } from "mongodb";
-import moment from "moment";
+import moment from "moment-timezone";
 
-//???
 const handler = nc({
   onError,
 });
@@ -20,17 +19,17 @@ handler.put(async (req, res) => {
     order.isDelivered = true;
     order.deliveredAt = moment().format("MMMM Do YYYY, h:mm:ss a");
   }
-  await db
-    .collection("Orders")
-    .updateOne(
-      { _id: ObjectId(req.query.id) },
-      {
-        $set: {
-          isDelivered: true,
-          deliveredAt: moment().format("MMMM Do YYYY, h:mm:ss a"),
-        },
-      }
-    );
+  await db.collection("Orders").updateOne(
+    { _id: ObjectId(req.query.id) },
+    {
+      $set: {
+        isDelivered: true,
+        deliveredAt: moment()
+          .tz("America/Chicago")
+          .format("MMMM Do YYYY, h:mm:ss a"),
+      },
+    }
+  );
   if (order) {
     res.send({ message: "order delivered", order: order });
   } else {
