@@ -86,7 +86,7 @@ function Order({ params }) {
     shippingPrice,
     totalPrice,
     isPaid,
-    paidAt,
+    //paidAt,
     isDelivered,
     deliveredAt,
   } = order;
