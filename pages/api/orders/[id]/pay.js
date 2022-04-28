@@ -29,7 +29,7 @@ handler.put(async (req, res) => {
     {
       $set: {
         isPaid: true,
-        paidAt: moment().format("MMMM Do YYYY, h:mm:ss a"),
+        paidAt: moment().local().format("MMMM Do YYYY, h:mm:ss a"),
       },
     }
   );

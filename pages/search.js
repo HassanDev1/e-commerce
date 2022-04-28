@@ -7,18 +7,18 @@ import {
   MenuItem,
   Select,
   Typography,
-} from '@material-ui/core';
-import CancelIcon from '@material-ui/icons/Cancel';
-import { useRouter } from 'next/router';
-import React, { useContext } from 'react';
-import Layout from '../components/Layout';
-import ProductItem from '../components/ProductItem';
-import { Store } from '../utils/Store';
-import { connectToDatabase } from '../utils/db';
-import useStyles from '../utils/styles';
-import axios from 'axios';
-import { Rating } from '@mui/material';
-import { Pagination } from '@material-ui/lab';
+} from "@material-ui/core";
+import CancelIcon from "@material-ui/icons/Cancel";
+import { useRouter } from "next/router";
+import React, { useContext } from "react";
+import Layout from "../components/Layout";
+import ProductItem from "../components/ProductItem";
+import { Store } from "../utils/Store";
+import { connectToDatabase } from "../utils/db";
+import useStyles from "../utils/styles";
+import axios from "axios";
+import { Rating } from "@mui/material";
+import { Pagination } from "@material-ui/lab";
 
 const PAGE_SIZE = 6;
 
@@ -28,11 +28,11 @@ export default function Search(props) {
   const classes = useStyles();
   const router = useRouter();
   const {
-    query = 'all',
-    category = 'all',
-    brand = 'all',
-    rating = 'all',
-    sort = '',
+    query = "all",
+    category = "all",
+    brand = "all",
+    rating = "all",
+    sort = "",
   } = router.query;
   const products = props.productDocs;
   const countProducts = props.countProducts;
@@ -86,14 +86,14 @@ export default function Search(props) {
     const quantity = existItem ? existItem.quantity + 1 : 1;
     const { data } = await axios.get(`/api/products/${product._id}`);
     if (data.countInStock < quantity) {
-      window.alert('Sorry, this product is out of stock at the moment.');
+      window.alert("Sorry, this product is out of stock at the moment.");
       return;
     }
-    dispatch({ type: 'CART_ADD_ITEM', payload: { ...product, quantity } });
-    router.push('/cart');
+    dispatch({ type: "CART_ADD_ITEM", payload: { ...product, quantity } });
+    router.push("/cart");
   };
   return (
-    <Layout title="Search">
+    <Layout title='Search'>
       <Grid className={classes.mt1} container spacing={1}>
         <Grid item md={3}>
           <List>
@@ -101,7 +101,7 @@ export default function Search(props) {
               <Box className={classes.fullWidth}>
                 <Typography>Categories</Typography>
                 <Select fullWidth value={category} onChange={categoryHandler}>
-                  <MenuItem value="all">All</MenuItem>
+                  <MenuItem value='all'>All</MenuItem>
                   {categories &&
                     categories.map((category) => (
                       <MenuItem key={category} value={category}>
@@ -115,7 +115,7 @@ export default function Search(props) {
               <Box className={classes.fullWidth}>
                 <Typography>Brands</Typography>
                 <Select value={brand} onChange={brandHandler} fullWidth>
-                  <MenuItem value="all">All</MenuItem>
+                  <MenuItem value='all'>All</MenuItem>
                   {brands &&
                     brands.map((brand) => (
                       <MenuItem key={brand} value={brand}>
@@ -129,11 +129,11 @@ export default function Search(props) {
               <Box className={classes.fullWidth}>
                 <Typography>Ratings</Typography>
                 <Select value={rating} onChange={ratingHandler} fullWidth>
-                  <MenuItem value="all">All</MenuItem>
+                  <MenuItem value='all'>All</MenuItem>
                   {ratings.map((rating) => (
-                    <MenuItem dispaly="flex" key={rating} value={rating}>
+                    <MenuItem dispaly='flex' key={rating} value={rating}>
                       <Rating value={rating} readOnly />
-                      <Typography component="span">&amp; Up</Typography>
+                      <Typography component='span'>&amp; Up</Typography>
                     </MenuItem>
                   ))}
                 </Select>
@@ -142,30 +142,30 @@ export default function Search(props) {
           </List>
         </Grid>
         <Grid item md={9}>
-          <Grid container justifyContent="space-between" alignItems="center">
+          <Grid container justifyContent='space-between' alignItems='center'>
             <Grid item>
-              {products.length === 0 ? 'No' : countProducts} Results
-              {query !== 'all' && query !== '' && ' : ' + query}
-              {category !== 'all' && ' : ' + category}
-              {brand !== 'all' && ' : ' + brand}
-              {rating !== 'all' && ' : Rating ' + rating + ' & up'}
-              {(query !== 'all' && query !== '') ||
-              category !== 'all' ||
-              brand !== 'all' ||
-              rating !== 'all' ? (
-                <Button onClick={() => router.push('/search')}>
+              {products.length === 0 ? "No" : countProducts} Results
+              {query !== "all" && query !== "" && " : " + query}
+              {category !== "all" && " : " + category}
+              {brand !== "all" && " : " + brand}
+              {rating !== "all" && " : Rating " + rating + " & up"}
+              {(query !== "all" && query !== "") ||
+              category !== "all" ||
+              brand !== "all" ||
+              rating !== "all" ? (
+                <Button onClick={() => router.push("/search")}>
                   <CancelIcon />
                 </Button>
               ) : null}
             </Grid>
             <Grid item>
-              <Typography component="span" className={classes.sort}>
+              <Typography component='span' className={classes.sort}>
                 Sort by
               </Typography>
               <Select value={sort} onChange={sortHandler}>
-                <MenuItem value="lowest">Price: Low to High</MenuItem>
-                <MenuItem value="highest">Price: High to Low</MenuItem>
-                <MenuItem value="available">Stock Availability</MenuItem>
+                <MenuItem value='lowest'>Price: Low to High</MenuItem>
+                <MenuItem value='highest'>Price: High to Low</MenuItem>
+                <MenuItem value='available'>Stock Availability</MenuItem>
               </Select>
             </Grid>
           </Grid>
@@ -181,7 +181,7 @@ export default function Search(props) {
           </Grid>
           <Pagination
             className={classes.mt1}
-            defaultPage={parseInt(query.page || '1')}
+            defaultPage={parseInt(query.page || "1")}
             count={pages}
             onChange={pageHandler}
           ></Pagination>
@@ -195,25 +195,25 @@ export async function getServerSideProps({ query }) {
   const { db } = await connectToDatabase();
   const pageSize = query.pageSize || PAGE_SIZE;
   const page = query.page || 1;
-  const category = query.category || '';
-  const brand = query.brand || '';
-  const rating = query.rating || '';
-  const sort = query.sort || '';
-  const searchQuery = query.query || '';
+  const category = query.category || "";
+  const brand = query.brand || "";
+  const rating = query.rating || "";
+  const sort = query.sort || "";
+  const searchQuery = query.query || "";
 
   const queryFilter =
-    searchQuery && searchQuery !== 'all'
+    searchQuery && searchQuery !== "all"
       ? {
           name: {
             $regex: searchQuery,
-            $options: 'i',
+            $options: "i",
           },
         }
       : {};
-  const categoryFilter = category && category !== 'all' ? { category } : {};
-  const brandFilter = brand && brand !== 'all' ? { brand } : {};
+  const categoryFilter = category && category !== "all" ? { category } : {};
+  const brandFilter = brand && brand !== "all" ? { brand } : {};
   const ratingFilter =
-    rating && rating !== 'all'
+    rating && rating !== "all"
       ? {
           rating: {
             $gte: Number(rating),
@@ -221,22 +221,22 @@ export async function getServerSideProps({ query }) {
         }
       : {};
   const order =
-    sort === 'lowest'
+    sort === "lowest"
       ? { price: 1 }
-      : sort === 'highest'
+      : sort === "highest"
       ? { price: -1 }
-      : sort === 'toprated'
+      : sort === "toprated"
       ? { rating: -1 }
-      : sort === 'available'
+      : sort === "available"
       ? { countInStock: -1 }
       : { _id: -1 };
 
-  const categories = await db.collection('Products').distinct('category');
+  const categories = await db.collection("Products").distinct("category");
 
-  const brands = await db.collection('Products').distinct('brand');
+  const brands = await db.collection("Products").distinct("brand");
 
   let productDocs = await db
-    .collection('Products')
+    .collection("Products")
     .find({
       ...queryFilter,
       ...categoryFilter,
@@ -248,7 +248,7 @@ export async function getServerSideProps({ query }) {
     .limit(pageSize)
     .toArray();
 
-  const countProducts = await db.collection('Products').countDocuments({
+  const countProducts = await db.collection("Products").countDocuments({
     ...queryFilter,
     ...categoryFilter,
     ...brandFilter,
