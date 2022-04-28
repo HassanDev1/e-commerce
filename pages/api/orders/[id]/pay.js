@@ -17,7 +17,7 @@ handler.put(async (req, res) => {
     .toArray();
   if (order) {
     order.isPaid = true;
-    order.paidAt = moment()
+    order.paidAt = moment(new Date())
       .tz("America/Chicago")
       .format("MMMM Do YYYY, h:mm:ss a");
     order.paymentResult = {
