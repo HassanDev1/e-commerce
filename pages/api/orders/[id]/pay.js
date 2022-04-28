@@ -3,7 +3,7 @@ import { connectToDatabase } from "../../../../utils/db";
 import onError from "../../../../utils/error";
 import { isAuth } from "../../../../utils/auth";
 import { ObjectId } from "mongodb";
-import moment from "moment";
+import moment from "moment-timezone";
 
 const handler = nc({
   onError,
@@ -17,7 +17,9 @@ handler.put(async (req, res) => {
     .toArray();
   if (order) {
     order.isPaid = true;
-    order.paidAt = moment().format("MMMM Do YYYY, h:mm:ss a");
+    order.paidAt = moment()
+      .tz("America/Chicago")
+      .format("MMMM Do YYYY, h:mm:ss a");
     order.paymentResult = {
       id: req.body.id,
       status: req.body.status,
