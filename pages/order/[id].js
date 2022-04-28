@@ -234,10 +234,7 @@ function Order({ params }) {
                 </ListItem>
                 <ListItem>{paymentMethod}</ListItem>
                 <ListItem>
-                  Status:{' '}
-                  {isPaid
-                    ? `paid on ${new Date(paidAt).toDateString()}`
-                    : 'not paid'}
+                  Status: {isPaid ? `paid on ${order.paidAt}` : 'not paid'}
                 </ListItem>
               </List>
             </Card>
